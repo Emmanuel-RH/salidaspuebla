@@ -117,7 +117,7 @@ function render(dateValue) {
   rows.forEach(({nombre,turnos})=>{
     const tr=document.createElement("tr"), th=document.createElement("th");
     th.scope="row";th.textContent=nombre;tr.append(th);
-    for(let i=0;i<7;i++){const td=document.createElement("td");td.textContent=turnos[i]??"–";tr.append(td);}
+    for(let i=0;i<7;i++){const td=document.createElement("td");const turno=turnos[i]??"–";td.textContent=turno;if(turno==="Vacaciones")td.classList.add("vacation-cell");tr.append(td);}
     body.append(tr);
   });
   status.textContent="Los números indican el turno asignado; el guion significa sin turno.";
