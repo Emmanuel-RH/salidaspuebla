@@ -1,23 +1,78 @@
 /* Datos de ejemplo. Sustituye la propiedad `semanas` con tus horarios reales.
    Formato de fecha de cada semana: AAAA-MM-DD (lunes correspondiente).
    Cada operador tiene siete turnos, de lunes a domingo. null = sin turno. */
+
 const semanas = {
-  "2026-10-12": [
-    { nombre: "Juan Pérez", turnos: [1, 2, 3, null, 1, 2, null] },
-    { nombre: "Luis Martínez", turnos: [2, 3, null, 1, 2, null, 4] },
-    { nombre: "Carlos Gómez", turnos: [3, null, 1, 2, 3, 4, null] },
-    { nombre: "Miguel Ramírez", turnos: [null, 1, 2, 3, null, 1, 2] },
-    { nombre: "José Hernández", turnos: [1, 2, 3, 4, null, null, 1] },
-    { nombre: "Diego Flores", turnos: [2, null, 4, 1, 2, 3, null] }
+  "2026-10-05": [
+    {
+      nombre: "RICARDO ORBEA",
+      unidad: "T22795",
+      turnos: [4, 5, 3, 2, 1, 3, 2]
+    },
+    {
+      nombre: "EMILIO MANZO",
+      unidad: "",
+      turnos: [5, 2, 1, 3, 2, 1, 4]
+    },
+    {
+      nombre: "OMAR HEREDIA",
+      unidad: "",
+      turnos: [
+        "Vacaciones",
+        "Vacaciones",
+        "Vacaciones",
+        "Vacaciones",
+        "Vacaciones",
+        4,
+        3
+      ]
+    },
+    {
+      nombre: "JUAN CARLOS GUTIERREZ",
+      unidad: "T22780",
+      turnos: [
+        "Vacaciones",
+        "Vacaciones",
+        "Vacaciones",
+        "Vacaciones",
+        "Vacaciones",
+        "Vacaciones",
+        "Vacaciones"
+      ]
+    },
+    {
+      nombre: "MIGUEL ANGEL MARTINEZ",
+      unidad: "T22265",
+      turnos: [2, 4, 2, 1, 3, 2, 1]
+    }
   ],
 
-  "2026-10-19": [
-    { nombre: "Juan Pérez", turnos: [1, 2, 3, null, 1, 2, null] },
-    { nombre: "Luis Martínez", turnos: [2, 3, null, 1, 2, null, 4] },
-    { nombre: "Carlos Gómez", turnos: [3, null, 1, 2, 3, 4, null] },
-    { nombre: "Miguel Ramírez", turnos: [null, 1, 2, 3, null, 1, 2] },
-    { nombre: "José Hernández", turnos: [1, 2, 3, 4, null, null, 1] },
-    { nombre: "Diego Flores", turnos: [2, null, 4, 1, 2, 3, null] }
+  "2026-10-12": [
+    {
+      nombre: "RICARDO ORBEA",
+      unidad: "T22795",
+      turnos: [3, 2, 1, 5, 4, 3, 2]
+    },
+    {
+      nombre: "EMILIO MANZO",
+      unidad: "",
+      turnos: [4, 3, 2, 1, 5, 4, 3]
+    },
+    {
+      nombre: "OMAR HEREDIA",
+      unidad: "",
+      turnos: [5, 4, 3, 2, 1, 5, 4]
+    },
+    {
+      nombre: "JUAN CARLOS GUTIERREZ",
+      unidad: "T22780",
+      turnos: [1, 5, 4, 3, 2, 1, 5]
+    },
+    {
+      nombre: "MIGUEL ANGEL MARTINEZ",
+      unidad: "T22265",
+      turnos: [2, 1, 5, 4, 3, 2, 1]
+    }
   ]
 };
 
