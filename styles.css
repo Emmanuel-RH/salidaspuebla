@@ -3,3 +3,15 @@
 @media(max-width:700px){.brand img{width:105px;height:42px}}
 .brand{text-decoration:none}
 .calendar-icon{display:block;flex:0 0 52px;width:52px;height:52px;object-fit:contain;padding:8px}
+.main-nav{align-self:stretch;display:flex;align-items:stretch;gap:8px}
+.nav-tab{border:0;background:transparent;color:#1865ce;font:inherit;font-weight:650;padding:0 14px;cursor:pointer}
+.nav-tab:hover{background:#f1f6fd}
+.nav-current{border-bottom:3px solid #2674e8}
+.recommendations-section{padding-bottom:20px}
+.recommendations-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.recommendation-card{display:flex;align-items:flex-start;gap:16px;background:#fff;border:1px solid #e0eaf6;border-radius:15px;padding:22px;box-shadow:0 9px 32px #163c6b0b}
+.recommendation-number{display:grid;place-items:center;flex:0 0 36px;width:36px;height:36px;border-radius:50%;background:#e8f2ff;color:#1665ca;font-weight:750}
+.recommendation-card h2{margin:1px 0 8px;font-size:18px;color:#101d32}
+.recommendation-card p{margin:0;color:#627188;line-height:1.55}
+[hidden]{display:none!important}
+@media(max-width:700px){.main-nav{gap:0}.nav-tab{padding:0 8px;font-size:12px}.recommendations-grid{grid-template-columns:1fr}.recommendation-card{padding:18px}}

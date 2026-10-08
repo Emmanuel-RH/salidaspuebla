@@ -70,6 +70,23 @@ function render(dateValue) {
 
 document.querySelector("#prev-week").addEventListener("click",()=>render(toISO(addDays(fromISO(weekInput.value),-7))));
 document.querySelector("#next-week").addEventListener("click",()=>render(toISO(addDays(fromISO(weekInput.value),7))));
-document.querySelector("#search").addEventListener("click",()=>render(weekInput.value));
 weekInput.addEventListener("change",()=>render(weekInput.value));
-render(toISO(new Date()));
+const today = new Date();
+render(toISO(today));
+
+const sectionButtons = document.querySelectorAll(".nav-tab");
+const schedulesSection = document.querySelector("#schedules-section");
+const recommendationsSection = document.querySelector("#recommendations-section");
+sectionButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const showRecommendations = button.dataset.section === "recommendations";
+    schedulesSection.hidden = showRecommendations;
+    recommendationsSection.hidden = !showRecommendations;
+    sectionButtons.forEach((tab) => {
+      const isSelected = tab === button;
+      tab.classList.toggle("nav-current", isSelected);
+      if (isSelected) tab.setAttribute("aria-current", "page");
+      else tab.removeAttribute("aria-current");
+    });
+  });
+});
