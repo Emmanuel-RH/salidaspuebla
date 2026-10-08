@@ -138,6 +138,7 @@ function showSection(section) {
     homeSection.hidden = section !== "home";
     schedulesSection.hidden = section !== "schedules";
     recommendationsSection.hidden = section !== "recommendations";
+    document.body.classList.toggle("home-view", section === "home");
     sectionButtons.forEach((tab) => {
       const isSelected = tab.dataset.section === section;
       tab.classList.toggle("nav-current", isSelected);
@@ -147,3 +148,4 @@ function showSection(section) {
     window.scrollTo({ top: 0, behavior: "smooth" });
 }
 sectionLinks.forEach((link) => link.addEventListener("click", () => showSection(link.dataset.section)));
+showSection("home");
