@@ -154,11 +154,14 @@ h1 {
 .menu-arrow svg { width: 21px; height: 21px; }
 .site-footer {
   padding: 0 22px 23px;
-  font-size: .69rem;
-  font-weight: 700;
-  letter-spacing: .16em;
   text-align: center;
-  color: rgba(255,255,255,.68);
+}
+.site-footer img {
+  display: block;
+  width: 78px;
+  height: auto;
+  margin: 0 auto;
+  opacity: .8;
 }
 @media (max-width: 720px) {
   .hero {
