@@ -9,6 +9,15 @@ const semanas = {
     { nombre: "Miguel Ramírez", turnos: [null, 1, 2, 3, null, 1, 2] },
     { nombre: "José Hernández", turnos: [1, 2, 3, 4, null, null, 1] },
     { nombre: "Diego Flores", turnos: [2, null, 4, 1, 2, 3, null] }
+  ],
+
+  "2026-10-19": [
+    { nombre: "Juan Pérez", turnos: [1, 2, 3, null, 1, 2, null] },
+    { nombre: "Luis Martínez", turnos: [2, 3, null, 1, 2, null, 4] },
+    { nombre: "Carlos Gómez", turnos: [3, null, 1, 2, 3, 4, null] },
+    { nombre: "Miguel Ramírez", turnos: [null, 1, 2, 3, null, 1, 2] },
+    { nombre: "José Hernández", turnos: [1, 2, 3, 4, null, null, 1] },
+    { nombre: "Diego Flores", turnos: [2, null, 4, 1, 2, 3, null] }
   ]
 };
 
