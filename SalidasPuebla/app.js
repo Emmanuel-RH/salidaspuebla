@@ -130,18 +130,20 @@ const today = new Date();
 render(toISO(today));
 
 const sectionButtons = document.querySelectorAll(".nav-tab");
+const sectionLinks = document.querySelectorAll("[data-section]");
+const homeSection = document.querySelector("#home-section");
 const schedulesSection = document.querySelector("#schedules-section");
 const recommendationsSection = document.querySelector("#recommendations-section");
-sectionButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const showRecommendations = button.dataset.section === "recommendations";
-    schedulesSection.hidden = showRecommendations;
-    recommendationsSection.hidden = !showRecommendations;
+function showSection(section) {
+    homeSection.hidden = section !== "home";
+    schedulesSection.hidden = section !== "schedules";
+    recommendationsSection.hidden = section !== "recommendations";
     sectionButtons.forEach((tab) => {
-      const isSelected = tab === button;
+      const isSelected = tab.dataset.section === section;
       tab.classList.toggle("nav-current", isSelected);
       if (isSelected) tab.setAttribute("aria-current", "page");
       else tab.removeAttribute("aria-current");
     });
-  });
-});
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+sectionLinks.forEach((link) => link.addEventListener("click", () => showSection(link.dataset.section)));

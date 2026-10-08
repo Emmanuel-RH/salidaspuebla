@@ -1,23 +1,16 @@
-# Salidas a Puebla
+# Centro Operativo | Solistica Base Orizaba
 
-Página web responsiva para consultar los turnos semanales de los operadores que realizan salidas a Puebla. No necesita servidor ni dependencias.
+Página de inicio estática para GitHub Pages.
 
-## Publicar en GitHub Pages
+## Instalación
+1. Copia `index.html`, `styles.css` y la carpeta `assets` a la raíz del repositorio que ya publica `solisticabaseori.tech`.
+2. Conserva la carpeta existente `salidas-puebla/` con su propio `index.html`, `app.js`, `styles.css` y recursos.
+3. El enlace a movedores apunta a `/horarios-movedores/`; crea esa carpeta cuando tengas el módulo correspondiente.
+4. No borres `CNAME` ni cambies el dominio ya configurado en GitHub Pages.
 
-1. Crea un repositorio público en GitHub.
-2. Sube `index.html`, `styles.css` y `app.js` a la raíz del repositorio.
-3. En **Settings → Pages → Build and deployment**, selecciona **Deploy from a branch**.
-4. Elige la rama `main`, carpeta `/(root)` y pulsa **Save**.
-5. La URL de publicación aparecerá en la sección Pages.
+## Rutas
+- `/`: página principal.
+- `/salidas-puebla/`: módulo Puebla.
+- `/horarios-movedores/`: módulo por crear.
 
-## Actualizar los horarios
-
-Edita el objeto `semanas` al inicio de `app.js`. Cada clave es la fecha **del lunes** en formato `AAAA-MM-DD`. Los 7 valores de `turnos` corresponden a lunes, martes, miércoles, jueves, viernes, sábado y domingo. Usa `null` cuando el operador no tenga salida.
-
-```js
-"2026-10-12": [
-  { nombre: "Juan Pérez", turnos: [1, 2, 3, null, 1, 2, null] }
-]
-```
-
-La información incluida es demostrativa. **Importante:** GitHub Pages es un sitio público si el repositorio se publica públicamente. No incluyas datos personales o información operativa confidencial sin autorización; para control de acceso se necesita autenticación y una fuente de datos protegida.
+Para cambiar el nivel de oscurecimiento, edita los valores `rgba` del selector `.hero::before` en `styles.css`.
