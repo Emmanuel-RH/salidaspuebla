@@ -184,17 +184,17 @@ a {
 
 .planta {
     --photo: url("Recursos_Imagenes/stats-img-2.jpg");
-    --shade: linear-gradient(160deg, #03152bb8, #031d42f7)
+    --shade: linear-gradient(160deg, #03152b1f, #031d424d)
 }
 
 .cad {
     --photo: url("Recursos_Imagenes/image.webp");
-    --shade: linear-gradient(160deg, #06344fba, #03395cf7)
+    --shade: linear-gradient(160deg, #03152b1f, #031d424d)
 }
 
 .base {
     --photo: url("Recursos_Imagenes/1113116.jpg");
-    --shade: linear-gradient(160deg, #0b203eb8, #061c3ff7)
+    --shade: linear-gradient(160deg, #03152b1f, #031d424d)
 }
 
 .tile h2 {
