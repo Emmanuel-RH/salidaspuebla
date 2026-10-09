@@ -86,12 +86,12 @@ const downloadButton = document.querySelector("#download-table");
 const downloadLabel = downloadButton?.querySelector(".download-label");
 
 function fromISO(iso) { const [y, m, d] = iso.split("-").map(Number); return new Date(y, m - 1, d, 12); }
-function toISO(date) { return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`; }
-function addDays(date, days) { const result = new Date(date); result.setDate(result.getDate()+days); return result; }
-function mondayOf(date) { const day = date.getDay(); return addDays(date, -((day+6)%7)); }
+function toISO(date) { return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`; }
+function addDays(date, days) { const result = new Date(date); result.setDate(result.getDate() + days); return result; }
+function mondayOf(date) { const day = date.getDay(); return addDays(date, -((day + 6) % 7)); }
 function periodText(monday) {
   const sunday = addDays(monday, 6);
-  if (monday.getMonth()===sunday.getMonth()) return `${monday.getDate()} al ${sunday.getDate()} de ${formatoMes.format(sunday)}`;
+  if (monday.getMonth() === sunday.getMonth()) return `${monday.getDate()} al ${sunday.getDate()} de ${formatoMes.format(sunday)}`;
   return `${monday.getDate()} de ${formatoMes.format(monday)} al ${sunday.getDate()} de ${formatoMes.format(sunday)}`;
 }
 
@@ -164,25 +164,25 @@ function render(dateValue) {
     header.replaceChildren();
     header.append(document.createTextNode(name));
     const secondary = document.createElement("span");
-    const day = addDays(monday,i);
-    secondary.textContent = `${day.getDate()} ${formatoMes.format(day).slice(0,3)}`;
+    const day = addDays(monday, i);
+    secondary.textContent = `${day.getDate()} ${formatoMes.format(day).slice(0, 3)}`;
     header.append(secondary);
   });
   body.replaceChildren();
   const rows = semanas[key] || [];
-  if (rows.length===0) {
-    const tr=document.createElement("tr"), td=document.createElement("td");
-    td.colSpan=8;td.textContent="No hay horarios publicados para esta semana.";tr.append(td);body.append(tr);
-    status.textContent="Selecciona una semana con horarios disponibles.";
+  if (rows.length === 0) {
+    const tr = document.createElement("tr"), td = document.createElement("td");
+    td.colSpan = 8; td.textContent = "No hay horarios publicados para esta semana."; tr.append(td); body.append(tr);
+    status.textContent = "Selecciona una semana con horarios disponibles.";
     return;
   }
-  rows.forEach(({nombre,turnos})=>{
-    const tr=document.createElement("tr"), th=document.createElement("th");
-    th.scope="row";th.textContent=nombre;tr.append(th);
-    for(let i=0;i<7;i++){const td=document.createElement("td");const turno=turnos[i]??"–";td.textContent=turno;if(turno==="Vacaciones")td.classList.add("vacation-cell");tr.append(td);}
+  rows.forEach(({ nombre, turnos }) => {
+    const tr = document.createElement("tr"), th = document.createElement("th");
+    th.scope = "row"; th.textContent = nombre; tr.append(th);
+    for (let i = 0; i < 7; i++) { const td = document.createElement("td"); const turno = turnos[i] ?? "–"; td.textContent = turno; if (turno === "Vacaciones") td.classList.add("vacation-cell"); tr.append(td); }
     body.append(tr);
   });
-  status.textContent="Los números indican el turno asignado; el guion significa sin turno.";
+  status.textContent = "Los números indican el turno asignado; el guion significa sin turno.";
 }
 
 async function downloadScheduleTable() {
@@ -350,9 +350,9 @@ async function downloadScheduleTable() {
   }
 }
 
-document.querySelector("#prev-week").addEventListener("click",()=>render(toISO(addDays(fromISO(weekInput.value),-7))));
-document.querySelector("#next-week").addEventListener("click",()=>render(toISO(addDays(fromISO(weekInput.value),7))));
-weekInput.addEventListener("change",()=>render(weekInput.value));
+document.querySelector("#prev-week").addEventListener("click", () => render(toISO(addDays(fromISO(weekInput.value), -7))));
+document.querySelector("#next-week").addEventListener("click", () => render(toISO(addDays(fromISO(weekInput.value), 7))));
+weekInput.addEventListener("change", () => render(weekInput.value));
 const today = new Date();
 render(toISO(today));
 
@@ -362,18 +362,18 @@ const homeSection = document.querySelector("#home-section");
 const schedulesSection = document.querySelector("#schedules-section");
 const recommendationsSection = document.querySelector("#recommendations-section");
 function showSection(section) {
-    homeSection.hidden = section !== "home";
-    schedulesSection.hidden = section !== "schedules";
-    recommendationsSection.hidden = section !== "recommendations";
-    document.body.classList.toggle("home-view", section === "home");
-    sectionButtons.forEach((tab) => {
-      const isSelected = tab.dataset.section === section;
-      tab.classList.toggle("nav-current", isSelected);
-      if (isSelected) tab.setAttribute("aria-current", "page");
-      else tab.removeAttribute("aria-current");
-    });
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  if (homeSection) homeSection.hidden = section !== "home";
+  schedulesSection.hidden = section !== "schedules";
+  recommendationsSection.hidden = section !== "recommendations";
+  document.body.classList.toggle("home-view", section === "home");
+  sectionButtons.forEach((tab) => {
+    const isSelected = tab.dataset.section === section;
+    tab.classList.toggle("nav-current", isSelected);
+    if (isSelected) tab.setAttribute("aria-current", "page");
+    else tab.removeAttribute("aria-current");
+  });
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 sectionLinks.forEach((link) => link.addEventListener("click", () => showSection(link.dataset.section)));
 if (downloadButton) downloadButton.addEventListener("click", downloadScheduleTable);
-showSection("home");
+showSection("schedules");
