@@ -5,39 +5,44 @@
 const semanas = {
   "2026-10-05": [
     {
-      nombre: "CESAR ALI LABRADA ROLON",
+      nombre: "DANIEL OJEDA MIXTECA",
       unidad: "",
-      turnos: ["Noche", "Noche", "Noche", "Noche", "Noche", "Noche", "Noche"]
+      turnos: ["Descanso", "Noche", "Noche", "Noche", "Noche", "Noche", "Noche"]
     },
     {
-      nombre: "EDWIN EDUARDO DIAZ OJEDA",
-      unidad: "",
-      turnos: ["Noche", "Noche", "Noche", "Noche", "Noche", "Noche", "Noche"]
-    },
-    {
-      nombre: "ERICK MARTINEZ HERNANDEZ",
+      nombre: "OSCAR ALONSO GONZALEZ BRIGADA",
       unidad: "",
       turnos: ["Mañana", "Mañana", "Mañana", "Mañana", "Mañana", "Mañana", "Mañana"]
     },
     {
-      nombre: "DAVID RODRIGUEZ LOPEZ",
+      nombre: "HECTOR URIEL AVENDAÑO CORDERO",
       unidad: "",
-      turnos: ["Mañana", "Mañana", "Mañana", "Mañana", "Mañana", "Mañana", "Mañana"]
+      turnos: ["Tarde", "Descanso", "Base 1°", "Base 1°", "Base 1°", "Base 1°", "Base 1°"]
     },
     {
-      nombre: "JOSE LUIS FIGUEROA LOPEZ",
+      nombre: "MARCO ANTONIO ALVA MARTINEZ",
       unidad: "",
-      turnos: ["Tarde", "Tarde", "Tarde", "Tarde", "Tarde", "Tarde", "Tarde"]
+      turnos: ["Noche", "Tarde", "Tarde", "Tarde", "Tarde", "Tarde", "Tarde"]
     },
     {
-      nombre: "JOSE ALFREDO ISLAS BELTRAN",
+      nombre: "EDUARDO JOEL MARTINEZ LUNA",
       unidad: "",
-      turnos: ["Tarde", "Tarde", "Tarde", "Tarde", "Tarde", "Tarde", "Tarde"]
+      turnos: ["Base 1°", "Base 1°", "Mañana", "Mañana", "Mañana", "Mañana", "Mañana"]
     },
     {
-      nombre: "CARLOS ALFREDO GARCIA GONZALES",
+      nombre: "BEATRIZ ADRIANA ARENAS HERNANDEZ",
       unidad: "",
-      turnos: ["Tarde", "Mañana", "Mañana", "Mañana", "Mañana", "Mañana", "Mañana"]
+      turnos: ["Base 2°", "Base 2°", "Base 2°", "Base 2°", "Base 2°", "Base 2°", "Descanso"]
+    },
+    {
+      nombre: "ELIUD ROMERO VALLEJO",
+      unidad: "",
+      turnos: ["Base 2°", "Base 2°", "Tarde", "Tarde", "Tarde", "Tarde", "Tarde"]
+    },
+    {
+      nombre: "JONATHAN UGARTE PALMA",
+      unidad: "",
+      turnos: ["Base 1°", "Base 1°", "Base 1°", "Base 1°", "Base 1°", "Descanso", "Base 2°"]
     }
   ]
 };
@@ -204,7 +209,7 @@ async function downloadScheduleTable() {
     ctx.fillStyle = "#0f1d33";
     ctx.textAlign = "left";
     ctx.font = "700 28px Arial";
-    ctx.fillText("Horario PLANTA", 32, 42);
+    ctx.fillText("Horario CAD/BASE", 32, 42);
     ctx.font = "700 22px Arial";
     ctx.fillText(title, 32, 72);
 

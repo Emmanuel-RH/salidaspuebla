@@ -147,7 +147,7 @@ a {
 }
 
 .base {
-    --photo: url("Recursos_Imagenes/images.jpg");
+    --photo: url("Recursos_Imagenes/1113116.jpg");
     --shade: linear-gradient(160deg, #162f5475, #092b52f0)
 }
 

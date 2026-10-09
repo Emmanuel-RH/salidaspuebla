@@ -5,39 +5,39 @@
 const semanas = {
   "2026-10-05": [
     {
-      nombre: "CESAR ALI LABRADA ROLON",
+      nombre: "OSCAR CORONADO RIOS",
       unidad: "",
-      turnos: ["Noche", "Noche", "Noche", "Noche", "Noche", "Noche", "Noche"]
+      turnos: ["Mañana", "Mañana", "Mañana", "Mañana", "Vacaciones", "Vacaciones", "Descanso"]
     },
     {
-      nombre: "EDWIN EDUARDO DIAZ OJEDA",
-      unidad: "",
-      turnos: ["Noche", "Noche", "Noche", "Noche", "Noche", "Noche", "Noche"]
-    },
-    {
-      nombre: "ERICK MARTINEZ HERNANDEZ",
+      nombre: "IVAN RAMIREZ DE ARELLANO",
       unidad: "",
       turnos: ["Mañana", "Mañana", "Mañana", "Mañana", "Mañana", "Mañana", "Mañana"]
     },
     {
-      nombre: "DAVID RODRIGUEZ LOPEZ",
-      unidad: "",
-      turnos: ["Mañana", "Mañana", "Mañana", "Mañana", "Mañana", "Mañana", "Mañana"]
-    },
-    {
-      nombre: "JOSE LUIS FIGUEROA LOPEZ",
+      nombre: "MISAEL ANGEL MOTES",
       unidad: "",
       turnos: ["Tarde", "Tarde", "Tarde", "Tarde", "Tarde", "Tarde", "Tarde"]
     },
     {
-      nombre: "JOSE ALFREDO ISLAS BELTRAN",
+      nombre: "ELIVORIO VICTOR CASTRO CRUZ",
       unidad: "",
-      turnos: ["Tarde", "Tarde", "Tarde", "Tarde", "Tarde", "Tarde", "Tarde"]
+      turnos: ["Tarde", "Tarde", "Tarde", "Descanso", "Tarde", "Tarde", "Tarde"]
     },
     {
-      nombre: "CARLOS ALFREDO GARCIA GONZALES",
+      nombre: "GERARDO SAMPAYO VARGAS",
       unidad: "",
-      turnos: ["Tarde", "Mañana", "Mañana", "Mañana", "Mañana", "Mañana", "Mañana"]
+      turnos: ["Descanso", "Noche", "Noche", "Noche", "Noche", "Noche", "Noche"]
+    },
+    {
+      nombre: "ERNESTO ANTONIO VILLANUEVA ALAVEZ",
+      unidad: "",
+      turnos: ["Noche", "Descanso", "Noche", "Noche", "Noche", "Noche", "Noche"]
+    },
+    {
+      nombre: "ELIAS ANDRADE HERNANDEZ",
+      unidad: "",
+      turnos: ["Noche", "Noche", "Descanso", "Tarde", "Mañana", "Mañana", "Mañana"]
     }
   ]
 };
@@ -204,7 +204,7 @@ async function downloadScheduleTable() {
     ctx.fillStyle = "#0f1d33";
     ctx.textAlign = "left";
     ctx.font = "700 28px Arial";
-    ctx.fillText("Horario PLANTA", 32, 42);
+    ctx.fillText("Horario SIVESA", 32, 42);
     ctx.font = "700 22px Arial";
     ctx.fillText(title, 32, 72);
 
