@@ -25,7 +25,53 @@
 .week-actions{display:flex;align-items:center;gap:9px}
 .week-actions .download-button{margin:0}
 
-@media(max-width:700px){.week-controls{justify-content:space-between}.week-actions{width:100%}.week-actions .date-field{flex:1}.week-actions .download-button{white-space:nowrap}}
+@media(max-width:700px){
+	.week-controls{justify-content:space-between;flex-wrap:nowrap;gap:6px}
+	.week-actions{width:auto;flex:0 0 auto;display:flex;align-items:center;gap:6px;flex-wrap:nowrap;margin-left:auto}
+	.week-actions .date-field{flex:0 1 auto}
+	.week-actions .download-button{white-space:nowrap}
+}
+
+@media(max-width:700px){
+	.topbar-inner{min-height:62px;padding:0 14px;gap:12px}
+	.brand img{width:92px}
+	.container{padding:18px 14px 34px}
+	.page-heading{margin:0 0 18px}
+	.page-heading p{font-size:14px}
+	.week-card{display:grid;grid-template-columns:1fr;padding:16px 14px;gap:14px}
+	.week-summary{gap:12px}
+	.week-summary strong{font-size:18px}
+	.week-controls{width:100%;display:grid;grid-template-columns:40px 40px minmax(0,1fr);gap:8px;justify-content:initial}
+	.icon-button{width:40px;min-height:40px;font-size:24px}
+	.week-actions{width:100%;min-width:0;display:flex;gap:8px;margin:0}
+	.date-field{min-width:0;flex:1;padding:0 10px}
+	.date-field input{min-width:0;width:100%;font-size:14px}
+	.download-button{min-height:40px;padding:0 14px;font-size:14px}
+	.table-section{margin-top:2px}
+	.status{margin-top:12px;font-size:13px}
+	.scroll-hint{margin-top:8px;font-size:12px}
+	.home-section{padding:0}
+	.home-hero{min-height:0;padding:24px 18px 22px;border-radius:18px}
+	.hero-copy h1{max-width:100%;font-size:clamp(28px,8.4vw,36px);line-height:1.06}
+	.hero-copy p{max-width:100%;font-size:14px;line-height:1.45}
+	.hero-actions{margin-top:16px}
+	body.home-view .container{min-height:calc(100dvh - 62px);height:auto;padding:12px 12px 14px}
+	body.home-view .home-hero{padding:24px 18px 22px}
+}
+
+@media(max-width:380px){
+	.topbar-inner{padding:0 10px}
+	.brand img{width:86px}
+	.container{padding:14px 10px 26px}
+	.week-card{padding:14px 12px}
+	.week-summary strong{font-size:17px}
+	.hero-copy h1{font-size:clamp(26px,9vw,32px)}
+	.hero-copy p{font-size:13px}
+	.week-actions{gap:6px}
+	.week-actions .date-field{min-width:0}
+	.week-actions .date-field input{font-size:13px}
+	.week-actions .download-button{padding:0 10px;font-size:12px}
+}
 
 
 .home-section{padding:8px 0 20px}
