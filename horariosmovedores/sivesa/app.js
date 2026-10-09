@@ -171,7 +171,6 @@ function render(dateValue) {
     th.scope = "row"; th.textContent = nombre; tr.append(th);
     for (let i = 0; i < 7; i++) { const td = document.createElement("td"); const turno = turnos[i] ?? "–"; td.textContent = turno; const turnoStyle = getTurnoStyle(turno); if (turnoStyle) td.classList.add(turnoStyle.className); tr.append(td); }
     body.append(tr);
-    fitTableText(th, nombre, 15, 9);
     tr.querySelectorAll("td").forEach((td) => fitTableText(td, td.textContent));
   });
   status.textContent = "Los números indican el turno asignado; el guion significa sin turno.";
@@ -286,7 +285,13 @@ async function downloadScheduleTable() {
       ctx.fillRect(tableX, y, totalWidth, rowHeight);
       ctx.strokeStyle = "#dfe8f2";
       ctx.strokeRect(tableX, y, firstColWidth, rowHeight);
-      fillCellText(ctx, row.nombre, tableX, y, firstColWidth, rowHeight, { font: "700 14px Arial" });
+      ctx.font = "700 14px Arial";
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#101d32";
+      const nameLines = wrapText(ctx, row.nombre, firstColWidth - 16);
+      nameLines.slice(0, 2).forEach((line, lineIndex) => {
+        ctx.fillText(line, tableX + 16, y + 24 + lineIndex * 17);
+      });
 
       row.turnos.forEach((turno, dayIndex) => {
         const x = tableX + firstColWidth + dayColWidth * dayIndex;
