@@ -8,11 +8,13 @@
 .topbar-inner{gap:20px}
 .brand{flex:0 0 auto}
 .main-nav{align-self:stretch;display:flex;align-items:stretch;justify-content:center;gap:4px;flex:1;min-width:0}
-.nav-tab{border:0;background:transparent;color:#1865ce;font:inherit;font-size:14px;font-weight:650;padding:0 12px;cursor:pointer;white-space:nowrap}
+.nav-tab{border:0;background:transparent;color:#1865ce;font:inherit;font-size:14px;font-weight:650;padding:0 12px;cursor:pointer;white-space:nowrap;text-align:center;justify-content:center}
 .nav-tab:hover{background:#f1f6fd}
 .nav-current{border-bottom:3px solid #2674e8}
 .area-return{flex:0 0 auto;margin-left:0;color:#1765b7;font-size:14px;font-weight:700;white-space:nowrap;text-decoration:none}
 .area-return:hover{text-decoration:underline}
+.table-section td.vacation-cell{box-shadow:inset 0 0 0 2px #15835b;color:#15835b;font-weight:700}
+.table-section td.absence-cell{box-shadow:inset 0 0 0 2px #d49b00;background:#fff7d6;color:#9a6b00;font-weight:700}
 .recommendations-section{padding-bottom:20px}
 .recommendations-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
 .recommendation-card{display:flex;align-items:flex-start;gap:16px;background:#fff;border:1px solid #e0eaf6;border-radius:15px;padding:22px;box-shadow:0 9px 32px #163c6b0b}
@@ -38,7 +40,7 @@
 }
 
 @media(max-width:700px){
-	.topbar-inner{min-height:62px;padding:0 14px;gap:12px}
+	.topbar-inner{min-height:62px;padding:18px 14px 0;gap:12px}
 	.brand img{width:92px}
 	.container{padding:18px 14px 34px}
 	.page-heading{margin:0 0 18px}

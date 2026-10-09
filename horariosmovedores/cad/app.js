@@ -70,8 +70,29 @@ function monthShort(date) {
   return formatoMes.format(date).slice(0, 3);
 }
 
+function getTurnoStyle(turno) {
+  const value = String(turno ?? "").trim().toLowerCase();
+  if (value === "vacaciones") return { className: "vacation-cell", border: "#15835b", background: "#e9f8f1", text: "#15835b" };
+  if (value === "descanso" || value === "incapacidad") return { className: "absence-cell", border: "#d49b00", background: "#fff7d6", text: "#9a6b00" };
+  return null;
+}
+
 function textWidth(ctx, text) {
   return ctx.measureText(String(text)).width;
+}
+
+function fitTableText(element, text, maxSize = 16, minSize = 9) {
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+  const availableWidth = element.clientWidth - 8;
+  let size = maxSize;
+  do {
+    ctx.font = `700 ${size}px Arial`;
+    size -= 0.5;
+  } while (size >= minSize && ctx.measureText(String(text)).width > availableWidth);
+  element.style.fontSize = `${Math.max(size + 0.5, minSize)}px`;
+  element.style.whiteSpace = "nowrap";
 }
 
 function wrapText(ctx, text, maxWidth) {
@@ -103,17 +124,20 @@ function drawRoundedRect(ctx, x, y, width, height, radius) {
 }
 
 function fillCellText(ctx, text, x, y, width, height, options = {}) {
-  const lines = wrapText(ctx, text, width - 16);
   const lineHeight = options.lineHeight || 18;
-  const totalHeight = lines.length * lineHeight;
-  let currentY = y + (height - totalHeight) / 2 + lineHeight - 4;
-  ctx.fillStyle = options.color || "#101d32";
+  const maxWidth = width - 16;
+  const maxFontSize = Number.parseInt((options.font || "700 15px Arial").match(/\d+/)?.[0] || "15", 10);
+  let fontSize = maxFontSize;
   ctx.font = options.font || "700 15px Arial";
+  while (fontSize > 9 && textWidth(ctx, text) > maxWidth) {
+    fontSize -= 0.5;
+    ctx.font = `${options.font?.startsWith("400") ? "400" : "700"} ${fontSize}px Arial`;
+  }
+  const totalHeight = lineHeight;
+  const currentY = y + (height - totalHeight) / 2 + lineHeight - 4;
+  ctx.fillStyle = options.color || "#101d32";
   ctx.textAlign = "center";
-  lines.forEach((line) => {
-    ctx.fillText(line, x + width / 2, currentY);
-    currentY += lineHeight;
-  });
+  ctx.fillText(String(text), x + width / 2, currentY);
 }
 
 function loadExportLogo() {
@@ -121,7 +145,7 @@ function loadExportLogo() {
     const logo = new Image();
     logo.onload = () => resolve(logo);
     logo.onerror = reject;
-    logo.src = "../Recursos_Imagenes/SVG-_15-SOLISTICA%20V1%20COLOR%201.svg?v=202610091135";
+    logo.src = "../Recursos_Imagenes/SVG-_15-SOLISTICA%20V1%20COLOR%201.svg?v=202610091150";
   });
 }
 
@@ -150,15 +174,18 @@ function render(dateValue) {
   rows.forEach(({ nombre, turnos }) => {
     const tr = document.createElement("tr"), th = document.createElement("th");
     th.scope = "row"; th.textContent = nombre; tr.append(th);
-    for (let i = 0; i < 7; i++) { const td = document.createElement("td"); const turno = turnos[i] ?? "–"; td.textContent = turno; if (turno === "Vacaciones") td.classList.add("vacation-cell"); tr.append(td); }
+    for (let i = 0; i < 7; i++) { const td = document.createElement("td"); const turno = turnos[i] ?? "–"; td.textContent = turno; const turnoStyle = getTurnoStyle(turno); if (turnoStyle) td.classList.add(turnoStyle.className); tr.append(td); }
     body.append(tr);
+    fitTableText(th, nombre, 15, 9);
+    tr.querySelectorAll("td").forEach((td) => fitTableText(td, td.textContent));
   });
   status.textContent = "Los números indican el turno asignado; el guion significa sin turno.";
 }
 
 async function downloadScheduleTable() {
   const label = weekInput.value || toISO(mondayOf(new Date()));
-  const fileName = `horario-puebla-${label}.jpg`;
+  const areaName = document.querySelector("#main-title")?.textContent.split("|").pop().trim() || "Área";
+  const fileName = `Semana ${weekLabel.textContent || label} Horario ${areaName}.jpg`;
   const originalLabel = downloadLabel ? downloadLabel.textContent : "Descargar Turno";
 
   if (downloadButton) {
@@ -268,15 +295,21 @@ async function downloadScheduleTable() {
 
       row.turnos.forEach((turno, dayIndex) => {
         const x = tableX + firstColWidth + dayColWidth * dayIndex;
+        ctx.strokeStyle = "#dfe8f2";
+        ctx.lineWidth = 1;
         ctx.strokeRect(x, y, dayColWidth, rowHeight);
-        if (turno === "Vacaciones") {
-          ctx.fillStyle = "#e9f8f1";
+        const turnoStyle = getTurnoStyle(turno);
+        if (turnoStyle) {
+          ctx.fillStyle = turnoStyle.background;
           drawRoundedRect(ctx, x + 8, y + 14, dayColWidth - 16, rowHeight - 28, 10);
           ctx.fill();
-          ctx.fillStyle = "#15835b";
+          ctx.strokeStyle = turnoStyle.border;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+          ctx.fillStyle = turnoStyle.text;
           ctx.font = "700 13px Arial";
           ctx.textAlign = "center";
-          ctx.fillText("Vacaciones", x + dayColWidth / 2, y + rowHeight / 2 + 5);
+          ctx.fillText(String(turno ?? "–"), x + dayColWidth / 2, y + rowHeight / 2 + 5);
         } else {
           ctx.fillStyle = "#101d32";
           ctx.font = "700 16px Arial";
@@ -326,6 +359,7 @@ document.querySelector("#next-week").addEventListener("click", () => render(toIS
 weekInput.addEventListener("change", () => render(weekInput.value));
 const today = new Date();
 render(toISO(today));
+window.addEventListener("resize", () => render(weekInput.value));
 
 const sectionButtons = document.querySelectorAll(".nav-tab");
 const sectionLinks = document.querySelectorAll("[data-section]");
