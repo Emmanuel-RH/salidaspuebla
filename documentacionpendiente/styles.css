@@ -30,7 +30,7 @@ body {
 body.landing {
     background:
         linear-gradient(#061221b8, #061221d9),
-        url("Recursos_Imagenes/ImagenFondo.png?v=202610091255") center / cover no-repeat fixed;
+        url("Recursos_Imagenes/ImagenFondo.png?v=202610091642") center / cover no-repeat fixed;
     color: #f4f8ff;
 }
 
@@ -144,7 +144,7 @@ a {
 }
 
 .tile {
-    --photo: url('Recursos_Imagenes/images.jpg?v=202610091255');
+    --photo: url('Recursos_Imagenes/images.jpg?v=202610091642');
     position: relative;
     isolation: isolate;
     overflow: hidden;
@@ -191,17 +191,17 @@ a {
 }
 
 .planta {
-    --photo: url("Recursos_Imagenes/colorful-paper-files-in-antique-filing-cabinet-drawer-close-up-free-photo.jpg?v=202610091255");
+    --photo: url("Recursos_Imagenes/colorful-paper-files-in-antique-filing-cabinet-drawer-close-up-free-photo.jpg?v=202610091642");
     --shade: linear-gradient(160deg, #03152b55, #031d426e)
 }
 
 .cad {
-    --photo: url("Recursos_Imagenes/images.jpg?v=202610091255");
+    --photo: url("Recursos_Imagenes/images.jpg?v=202610091642");
     --shade: linear-gradient(160deg, #06344f55, #03395c6e)
 }
 
 .base {
-    --photo: url("Recursos_Imagenes/1113116.jpg?v=202610091255");
+    --photo: url("Recursos_Imagenes/1113116.jpg?v=202610091642");
     --shade: linear-gradient(160deg, #0b203eb8, #061c3ff7)
 }
 
@@ -245,7 +245,7 @@ footer {
     background:
         radial-gradient(circle at 50% 35%, #16467433 0, transparent 42%),
         linear-gradient(#061221b8, #061221d9),
-        url("Recursos_Imagenes/ImagenFondo.png?v=202610091255") center / cover no-repeat fixed;
+        url("Recursos_Imagenes/ImagenFondo.png?v=202610091642") center / cover no-repeat fixed;
 }
 
 .landing .wrap {
