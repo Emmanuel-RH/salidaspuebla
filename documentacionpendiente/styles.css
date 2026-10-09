@@ -30,7 +30,7 @@ body {
 body.landing {
     background:
         linear-gradient(#061221b8, #061221d9),
-        url("Recursos_Imagenes/Convoy Solistica al atardecer en Orizaba.png") center / cover no-repeat fixed;
+        url("Recursos_Imagenes/ImagenFondo.png?v=202610091255") center / cover no-repeat fixed;
     color: #f4f8ff;
 }
 
@@ -135,8 +135,16 @@ a {
     gap: 20px
 }
 
+.landing .cards {
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 1040px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .tile {
-    --photo: url('Recursos_Imagenes/images.jpg');
+    --photo: url('Recursos_Imagenes/images.jpg?v=202610091255');
     position: relative;
     isolation: isolate;
     overflow: hidden;
@@ -183,17 +191,17 @@ a {
 }
 
 .planta {
-    --photo: url("Recursos_Imagenes/stats-img-2.jpg");
-    --shade: linear-gradient(160deg, #03152bb8, #031d42f7)
+    --photo: url("Recursos_Imagenes/colorful-paper-files-in-antique-filing-cabinet-drawer-close-up-free-photo.jpg?v=202610091255");
+    --shade: linear-gradient(160deg, #03152b55, #031d426e)
 }
 
 .cad {
-    --photo: url("Recursos_Imagenes/image.webp");
-    --shade: linear-gradient(160deg, #06344fba, #03395cf7)
+    --photo: url("Recursos_Imagenes/images.jpg?v=202610091255");
+    --shade: linear-gradient(160deg, #06344f55, #03395c6e)
 }
 
 .base {
-    --photo: url("Recursos_Imagenes/1113116.jpg");
+    --photo: url("Recursos_Imagenes/1113116.jpg?v=202610091255");
     --shade: linear-gradient(160deg, #0b203eb8, #061c3ff7)
 }
 
@@ -237,7 +245,7 @@ footer {
     background:
         radial-gradient(circle at 50% 35%, #16467433 0, transparent 42%),
         linear-gradient(#061221b8, #061221d9),
-        url("Recursos_Imagenes/Convoy Solistica al atardecer en Orizaba.png") center / cover no-repeat fixed;
+        url("Recursos_Imagenes/ImagenFondo.png?v=202610091255") center / cover no-repeat fixed;
 }
 
 .landing .wrap {
