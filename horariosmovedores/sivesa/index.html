@@ -11,11 +11,29 @@
   <meta http-equiv="Expires" content="0" />
   <title>Horario SIVESA | Solistica</title>
   <link rel="icon" type="image/svg+xml" href="/horariosmovedores/Recursos_Imagenes/SVG-_15-SOLISTICA V1 COLOR 1.svg?v=202610091135" />
+  <link rel="stylesheet" href="../auth.css?v=202610091400" />
   <link rel="stylesheet" href="styles.css?v=202610091250" />
+  <script src="../auth.js?v=202610091400" defer></script>
   <script src="app.js?v=202610091220" defer></script>
 </head>
 
-<body>
+<body class="protected-page" data-area="sivesa">
+  <section class="login-shell" aria-labelledby="login-title">
+    <form class="login-card" id="login-form" autocomplete="off">
+      <img class="login-logo" src="/horariosmovedores/Recursos_Imagenes/SVG-_15-SOLISTICA V1 COLOR 1.svg"
+        alt="Solistica" />
+      <h1 id="login-title">Acceso a <span id="login-area">SIVESA</span></h1>
+      <p class="login-subtitle">Ingresa tus credenciales para consultar los horarios.</p>
+      <label class="login-field" for="login-usuario">Usuario
+        <input id="login-usuario" name="usuario" type="text" autocomplete="username" required />
+      </label>
+      <label class="login-field" for="login-contrasena">Contraseña
+        <input id="login-contrasena" name="contrasena" type="password" autocomplete="current-password" required />
+      </label>
+      <p class="login-error" id="login-error" role="alert" aria-live="polite"></p>
+      <button class="login-button" type="submit">Iniciar sesión</button>
+    </form>
+  </section>
   <header class="topbar">
     <div class="topbar-inner">
       <a class="brand" href="https://traxion.global/es/solistica" aria-label="Visitar el sitio de Solistica">
@@ -26,6 +44,8 @@
           Horarios</button>
         <button class="nav-tab" type="button" data-section="recommendations">Recomendaciones Viales</button>
       </nav>
+      <span class="welcome-user" id="welcome-user" aria-live="polite"></span>
+      <button class="logout-button" id="logout-button" type="button">Cerrar sesión</button>
       <a class="area-return" href="../" aria-label="Regresar a la elección de Planta, CAD o Base"
         title="Regresar a la elección de Planta, CAD o Base">← Elegir área</a>
     </div>

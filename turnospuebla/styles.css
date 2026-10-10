@@ -6,6 +6,7 @@
 @media(max-width:700px){table{min-width:640px}th,td{padding:12px 6px}thead th{font-size:12px}thead th:first-child,tbody th{min-width:0;padding-left:10px}thead th:first-child{font-size:14px}tbody th,tbody td{font-size:13px}}
 @media(max-width:700px){tbody td.vacation-cell{font-size:10px;white-space:nowrap}}
 .main-nav{align-self:stretch;display:flex;align-items:stretch;gap:8px}
+.welcome-user{display:flex;align-items:center;margin-left:auto;color:#435773;font-size:14px;font-weight:650;white-space:nowrap}
 .nav-tab{border:0;background:transparent;color:#1865ce;font:inherit;font-weight:650;padding:0 14px;cursor:pointer}
 .nav-tab:hover{background:#f1f6fd}
 .nav-current{border-bottom:3px solid #2674e8}
@@ -17,6 +18,15 @@
 .recommendation-card p{margin:0;color:#627188;line-height:1.55}
 [hidden]{display:none!important}
 @media(max-width:700px){.main-nav{gap:0}.nav-tab{padding:0 8px;font-size:12px}.recommendations-grid{grid-template-columns:1fr}.recommendation-card{padding:18px}}
+
+body.protected-page .main-nav{flex:1;min-width:0}
+
+@media(max-width:700px){
+	body.protected-page .topbar-inner{gap:6px;flex-wrap:wrap}
+	body.protected-page .welcome-user{order:2;margin-left:auto;font-size:12px}
+	body.protected-page .logout-button{order:3}
+	body.protected-page .main-nav{order:4;flex-basis:100%;width:100%;height:42px;margin-top:8px;border-top:1px solid #eef2f7}
+}
 
 .download-button{min-height:42px;border:1px solid #c8dcf4;border-radius:10px;padding:0 18px;background:#eff6ff;color:#125bb2;font:inherit;font-weight:700;cursor:pointer;margin:0 0 14px}
 .download-button:hover{background:#e3efff;border-color:#a9c9ec}

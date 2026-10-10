@@ -1,0 +1,154 @@
+body.protected-page:not(.is-authenticated) > :not(.login-shell) {
+  display: none;
+}
+
+body.protected-page.is-authenticated .login-shell {
+  display: none;
+}
+
+.login-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    linear-gradient(#071a2dcc, #071a2dcc),
+    url("./Recursos_Imagenes/Convoy Solistica al atardecer en Orizaba.png") center / cover no-repeat;
+}
+
+.login-card {
+  width: min(100%, 430px);
+  padding: 36px;
+  background: #fff;
+  border: 1px solid #e0eaf6;
+  border-radius: 18px;
+  box-shadow: 0 14px 40px #163c6b18;
+}
+
+.login-logo {
+  display: block;
+  width: 150px;
+  margin: 0 auto 24px;
+}
+
+.login-card h1 {
+  margin-bottom: 8px;
+  color: #101d32;
+  font-size: 30px;
+}
+
+.login-card p {
+  color: #627188;
+  line-height: 1.5;
+}
+
+.login-subtitle {
+  margin: 0 0 24px;
+}
+
+.login-field {
+  display: block;
+  margin-top: 16px;
+  color: #31445f;
+  font-weight: 650;
+}
+
+.login-field input {
+  display: block;
+  width: 100%;
+  min-height: 45px;
+  margin-top: 7px;
+  padding: 0 12px;
+  border: 1px solid #cbd9e9;
+  border-radius: 9px;
+  color: #25344c;
+  font: inherit;
+}
+
+.login-field input:focus {
+  border-color: #2677eb;
+  outline: 3px solid #2677eb2e;
+}
+
+.login-button {
+  width: 100%;
+  min-height: 45px;
+  margin-top: 24px;
+  border: 0;
+  border-radius: 9px;
+  background: #2677eb;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.login-button:hover {
+  background: #135cc5;
+}
+
+.login-error {
+  min-height: 21px;
+  margin: 12px 0 0;
+  color: #b42318 !important;
+  font-size: 14px;
+}
+
+.logout-button {
+  flex: 0 0 auto;
+  border: 1px solid #c8dcf4;
+  border-radius: 8px;
+  padding: 8px 11px;
+  background: #eff6ff;
+  color: #125bb2;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background: #e3efff;
+}
+
+.welcome-user {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  color: #435773;
+  font-size: 14px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  body.protected-page .topbar-inner {
+    gap: 6px;
+  }
+
+  body.protected-page .welcome-user {
+    order: 4;
+    width: 100%;
+    justify-content: center;
+    margin-left: 0;
+    font-size: 12px;
+  }
+
+  body.protected-page .area-return {
+    order: 2;
+    margin-left: auto;
+  }
+
+  body.protected-page .logout-button {
+    order: 3;
+    margin-left: 0;
+  }
+
+  body.protected-page .main-nav {
+    order: 5;
+  }
+
+  .login-card {
+    padding: 28px 22px;
+  }
+}
