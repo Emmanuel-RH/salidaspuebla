@@ -1,16 +1,35 @@
-# Centro Operativo | Solistica Base Orizaba
+# Solistica | Portal Operativo Base Orizaba
 
-Página de inicio estática para GitHub Pages.
+Portal web de consulta y seguimiento operativo para **Solistica Base Orizaba**, diseñado para centralizar información de horarios, turnos y documentación pendiente en una interfaz accesible desde computadoras y dispositivos móviles.
 
-## Instalación
-1. Copia `index.html`, `styles.css` y la carpeta `assets` a la raíz del repositorio que ya publica `solisticabaseori.tech`.
-2. Conserva la carpeta existente `salidas-puebla/` con su propio `index.html`, `app.js`, `styles.css` y recursos.
-3. El enlace a movedores apunta a `/horarios-movedores/`; crea esa carpeta cuando tengas el módulo correspondiente.
-4. No borres `CNAME` ni cambies el dominio ya configurado en GitHub Pages.
+## Objetivo
 
-## Rutas
-- `/`: página principal.
-- `/salidas-puebla/`: módulo Puebla.
-- `/horarios-movedores/`: módulo por crear.
+Facilitar al personal operativo y administrativo el acceso a información actualizada, mejorar la organización de las consultas frecuentes y apoyar el seguimiento de actividades de la operación logística.
 
-Para cambiar el nivel de oscurecimiento, edita los valores `rgba` del selector `.hero::before` en `styles.css`.
+## Módulos del portal
+
+| Módulo | Descripción | Acceso |
+| --- | --- | --- |
+| **Horarios de Movedores** | Consulta de los horarios asignados al personal de movimiento de unidades. 
+| **Turnos Puebla** | Consulta de la programación semanal de turnos de Puebla. 
+| **Documentación Pendiente** | Calendario para la visualización y seguimiento de documentación pendiente. 
+
+## Características
+
+- Menú principal con accesos independientes a cada módulo.
+- Diseño adaptable a equipos de escritorio y dispositivos móviles.
+- Identidad visual orientada al entorno corporativo y logístico.
+- Navegación centralizada mediante un dominio personalizado.
+- Organización modular para incorporar nuevas funcionalidades sin rediseñar todo el portal.
+
+> **Nota de seguridad:** el contenido publicado mediante GitHub Pages es público. Las pantallas de inicio de sesión implementadas solo con JavaScript no protegen por sí mismas archivos o información confidencial.
+
+## Tecnologías
+
+- **HTML5:** estructura de las páginas.
+- **CSS3:** estilos y diseño adaptable.
+- **JavaScript:** interacciones y funcionalidades de los módulos.
+- **GitHub Pages:** publicación del sitio web.
+- **GitHub:** repositorio y control de versiones.
+
+*Proyecto de apoyo operativo. El nombre y los elementos de identidad corporativa pertenecen a sus respectivos titulares.*
