@@ -28,7 +28,7 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: #0a1d30 url("assets/Blog_TultePark.webp") center center / cover no-repeat;
+  background: #0a1d30 url("assets/Blog_TultePark.webp?v=202610112009") center center / cover no-repeat;
 }
 .hero::before {
   content: "";

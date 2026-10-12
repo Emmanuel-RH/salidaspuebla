@@ -30,7 +30,7 @@ body {
 body.landing {
     background:
         linear-gradient(#061221b8, #061221d9),
-        url("Recursos_Imagenes/Convoy Solistica al atardecer en Orizaba.png") center / cover no-repeat fixed;
+        url("Recursos_Imagenes/Convoy Solistica al atardecer en Orizaba.png?v=202610112009") center / cover no-repeat fixed;
     color: #f4f8ff;
 }
 
@@ -136,7 +136,7 @@ a {
 }
 
 .tile {
-    --photo: url('Recursos_Imagenes/images.jpg');
+    --photo: url('Recursos_Imagenes/images.jpg?v=202610112009');
     position: relative;
     isolation: isolate;
     overflow: hidden;
@@ -183,17 +183,17 @@ a {
 }
 
 .planta {
-    --photo: url("Recursos_Imagenes/stats-img-2.jpg");
+    --photo: url("Recursos_Imagenes/stats-img-2.jpg?v=202610112009");
     --shade: linear-gradient(160deg, #03152b1f, #031d424d)
 }
 
 .cad {
-    --photo: url("Recursos_Imagenes/image.webp");
+    --photo: url("Recursos_Imagenes/image.webp?v=202610112009");
     --shade: linear-gradient(160deg, #03152b1f, #031d424d)
 }
 
 .base {
-    --photo: url("Recursos_Imagenes/1113116.jpg");
+    --photo: url("Recursos_Imagenes/1113116.jpg?v=202610112009");
     --shade: linear-gradient(160deg, #03152b1f, #031d424d)
 }
 
@@ -237,7 +237,7 @@ footer {
     background:
         radial-gradient(circle at 50% 35%, #16467433 0, transparent 42%),
         linear-gradient(#061221b8, #061221d9),
-        url("Recursos_Imagenes/Convoy Solistica al atardecer en Orizaba.png") center / cover no-repeat fixed;
+        url("Recursos_Imagenes/Convoy Solistica al atardecer en Orizaba.png?v=202610112009") center / cover no-repeat fixed;
 }
 
 .landing .wrap {

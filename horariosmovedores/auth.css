@@ -13,7 +13,7 @@ body.protected-page.is-authenticated .login-shell {
   padding: 24px;
   background:
     linear-gradient(#071a2dcc, #071a2dcc),
-    url("./Recursos_Imagenes/Convoy Solistica al atardecer en Orizaba.png") center / cover no-repeat;
+    url("./Recursos_Imagenes/Convoy Solistica al atardecer en Orizaba.png?v=202610112009") center / cover no-repeat;
 }
 
 .login-card {
