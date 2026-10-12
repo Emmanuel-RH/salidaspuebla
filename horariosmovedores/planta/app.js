@@ -39,6 +39,44 @@ const semanas = {
       unidad: "",
       turnos: ["Tarde", "Mañana", "Mañana", "Mañana", "Mañana", "Mañana", "Mañana"]
     }
+  ],
+
+  "2026-10-12": [
+    {
+      nombre: "CESAR ALI LABRADA ROLON",
+      unidad: "",
+      turnos: ["Descanso", "Tarde", "Descanso", "Tarde", "Tarde", "Tarde", "Tarde"]
+    },
+    {
+      nombre: "EDWIN EDUARDO DIAZ OJEDA",
+      unidad: "",
+      turnos: ["Tarde", "Tarde", "Tarde", "Descanso", "Tarde", "Tarde", "Tarde"]
+    },
+    {
+      nombre: "ERICK MARTINEZ HERNANDEZ",
+      unidad: "",
+      turnos: ["Descanso", "Noche", "Noche", "Noche", "Noche", "Noche", "Noche"]
+    },
+    {
+      nombre: "DAVID RODRIGUEZ LOPEZ",
+      unidad: "",
+      turnos: ["Noche", "Descanso", "Noche", "Noche", "Noche", "Noche", "Noche"]
+    },
+    {
+      nombre: "JOSE LUIS FIGUEROA LOPEZ",
+      unidad: "",
+      turnos: ["Mañana", "Mañana", "Mañana", "Mañana", "Mañana", "Descanso", "Mañana"]
+    },
+    {
+      nombre: "JOSE ALFREDO ISLAS BELTRAN",
+      unidad: "",
+      turnos: ["Mañana", "Mañana", "Mañana", "Mañana", "Mañana", "Mañana", "Descanso"]
+    },
+    {
+      nombre: "CARLOS ALFREDO GARCIA GONZALES",
+      unidad: "",
+      turnos: ["Noche", "Noche", "Tarde", "Tarde", "Descanso", "Mañana", "Mañana"]
+    }
   ]
 };
 

@@ -44,7 +44,51 @@ const semanas = {
       unidad: "",
       turnos: ["Base 1°", "Base 1°", "Base 1°", "Base 1°", "Base 1°", "Descanso", "Base 2°"]
     }
+  ],
+
+  "2026-10-12": [
+    {
+      nombre: "DANIEL OJEDA MIXTECA",
+      unidad: "",
+      turnos: ["Tarde", "Descanso", "Tarde", "Tarde", "Tarde", "Tarde", "Tarde"]
+    },
+    {
+      nombre: "OSCAR ALONSO GONZALEZ BRIGADA",
+      unidad: "",
+      turnos: ["Descanso", "Noche", "Noche", "Noche", "Noche", "Noche", "Noche"]
+    },
+    {
+      nombre: "HECTOR URIEL AVENDAÑO CORDERO",
+      unidad: "",
+      turnos: ["Base 2°", "Base 2°", "Base 2°", "Base 2°", "Base 2°", "Descanso", "Base 2°"]
+    },
+    {
+      nombre: "MARCO ANTONIO ALVA MARTINEZ",
+      unidad: "",
+      turnos: ["Mañana", "Mañana", "Mañana", "Mañana", "Mañana", "Mañana", "Descanso"]
+    },
+    {
+      nombre: "EDUARDO JOEL MARTINEZ LUNA",
+      unidad: "",
+      turnos: ["Noche", "Tarde", "Tarde", "Tarde", "Mañana", "Descanso", "Mañana"]
+    },
+    {
+      nombre: "BEATRIZ ADRIANA ARENAS HERNANDEZ",
+      unidad: "",
+      turnos: ["Base 1°", "Base 1°", "Base 1°", "Base 1°", "Descanso", "Base 1°", "Base 1°"]
+    },
+    {
+      nombre: "ELIUD ROMERO VALLEJO",
+      unidad: "",
+      turnos: ["Noche", "Tarde", "Mañana", "Mañana", "Descanso", "Tarde", "Mañana"]
+    },
+    {
+      nombre: "JONATHAN UGARTE PALMA",
+      unidad: "",
+      turnos: ["Base 1°", "Base 1°", "Base 1°", "Descanso", "Base 1°", "Base 2°", "Base 2°"]
+    }
   ]
+
 };
 
 const nombresDias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
