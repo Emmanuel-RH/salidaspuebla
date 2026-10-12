@@ -39,7 +39,45 @@ const semanas = {
       unidad: "",
       turnos: ["Noche", "Noche", "Descanso", "Tarde", "Mañana", "Mañana", "Mañana"]
     }
-  ]
+  ],
+
+  "2026-10-12": [
+  {
+    nombre: "OSCAR CORONADO RIOS",
+    unidad: "",
+    turnos: ["Vacaciones", "Vacaciones", "Vacaciones", "Vacaciones", "Vacaciones", "Noche", "Noche"]
+  },
+  {
+    nombre: "IVAN RAMIREZ DE ARELLANO",
+    unidad: "",
+    turnos: ["Noche", "Noche", "Noche", "Noche", "Noche", "Noche", "Noche"]
+  },
+  {
+    nombre: "MISAEL ANGEL MOTES",
+    unidad: "",
+    turnos: ["Mañana", "Mañana", "Mañana", "Mañana", "Mañana", "Mañana", "Mañana"]
+  },
+  {
+    nombre: "ELIVORIO VICTOR CASTRO CRUZ",
+    unidad: "",
+    turnos: ["Mañana", "Mañana", "Mañana", "Mañana", "Mañana", "Mañana", "Mañana"]
+  },
+  {
+    nombre: "GERARDO SAMPAYO VARGAS",
+    unidad: "",
+    turnos: ["Tarde", "Tarde", "Tarde", "Tarde", "Tarde", "Descanso", "Tarde"]
+  },
+  {
+    nombre: "ERNESTO ANTONIO VILLANUEVA ALAVEZ",
+    unidad: "",
+    turnos: ["Tarde", "Tarde", "Tarde", "Tarde", "Tarde", "Tarde", "Tarde"]
+  },
+  {
+    nombre: "ELIAS ANDRADE HERNANDEZ",
+    unidad: "",
+    turnos: ["Noche", "Noche", "Noche", "Noche", "Noche", "Tarde", "Descanso"]
+  }
+]
 };
 
 const nombresDias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
@@ -140,7 +178,7 @@ function loadExportLogo() {
     const logo = new Image();
     logo.onload = () => resolve(logo);
     logo.onerror = reject;
-    logo.src = "../Recursos_Imagenes/SVG-_15-SOLISTICA%20V1%20COLOR%201.svg?v=202610091150";
+    logo.src = "../Recursos_Imagenes/SVG-_15-SOLISTICA%20V1%20COLOR%201.svg?v=202610121752";
   });
 }
 

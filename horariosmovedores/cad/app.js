@@ -145,7 +145,7 @@ function loadExportLogo() {
     const logo = new Image();
     logo.onload = () => resolve(logo);
     logo.onerror = reject;
-    logo.src = "../Recursos_Imagenes/SVG-_15-SOLISTICA%20V1%20COLOR%201.svg?v=202610091150";
+    logo.src = "../Recursos_Imagenes/SVG-_15-SOLISTICA%20V1%20COLOR%201.svg?v=202610121752";
   });
 }
 
