@@ -5,16 +5,20 @@
  */
 const USUARIOS_VALIDOS = {
   planta: [
-    { usuario: "BaseOri", contrasena: "Traxion2026!" }
+    { usuario: "BaseOri", contrasena: "Traxion2026!" },
+    { usuario: "ismael", contrasena: "Traxion.2026!" }
   ],
   sivesa: [
-    { usuario: "BaseOri", contrasena: "Traxion2026!" }
+    { usuario: "BaseOri", contrasena: "Traxion2026!" },
+    { usuario: "ismael", contrasena: "Traxion.2026!" }
   ],
   cad: [
-    { usuario: "BaseOri", contrasena: "Traxion2026!" }
+    { usuario: "BaseOri", contrasena: "Traxion2026!" },
+    { usuario: "ismael", contrasena: "Traxion.2026!" }
   ],
   turnospuebla: [
-    { usuario: "BaseOri", contrasena: "Traxion2026!" }
+    { usuario: "BaseOri", contrasena: "Traxion2026!" },
+    { usuario: "ismael", contrasena: "Traxion.2026!" }
   ]
 };
 
