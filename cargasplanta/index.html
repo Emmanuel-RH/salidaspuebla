@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solistica by TRAXION - Control de Boletas Full Planta</title>
+
+  <!-- Google Fonts Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- QRCode.js library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <!-- html2pdf.js bundle -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              navy: '#0f2744',
+              dark: '#081728',
+              blue: '#0284c7',
+              accent: '#0369a1',
+              lightBlue: '#f0f7ff',
+              surface: '#f8fafc',
+              border: '#e2e8f0',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Estilos específicos para impresión / exportación PDF */
+    #pdfRenderContainer {
+      width: 190mm;
+      height: 277mm;
+      padding: 0;
+      box-sizing: border-box;
+      background-color: #ffffff;
+      color: #000000;
+      font-family: 'Arial', 'Helvetica', sans-serif;
+      page-break-after: avoid;
+      break-after: avoid;
+      display: grid;
+      grid-template-rows: 134.5mm 8mm 134.5mm;
+    }
+
+    .boleta-card {
+      height: 134.5mm;
+      min-height: 0;
+      min-width: 0;
+      border: 1px solid #1e293b;
+      border-radius: 2mm;
+      padding: 3mm 4mm;
+      background: #fff;
+      box-sizing: border-box;
+      position: relative;
+      overflow: hidden;
+      break-inside: avoid;
+    }
+
+    #boletaOriginal { grid-row: 1; }
+    .dashed-cut-line { grid-row: 2; }
+    #boletaCopia { grid-row: 3; }
+
+    .boleta-card::before {
+      content: 'SOLISTICA  SOLISTICA  SOLISTICA  SOLISTICA';
+      position: absolute;
+      inset: 34mm -15mm auto -15mm;
+      transform: rotate(-24deg);
+      color: #0f2744;
+      opacity: 0.035;
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: 8px;
+      line-height: 28mm;
+      pointer-events: none;
+      white-space: pre-wrap;
+    }
+
+    .boleta-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .table-bordered {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    .table-bordered td, .table-bordered th {
+      border: 0;
+      border-bottom: 1px solid #94a3b8;
+      padding: 2px 4px;
+      vertical-align: middle;
+      font-size: 8px;
+      background: transparent !important;
+    }
+
+    .boleta-card > .flex.items-center.justify-between {
+      border-bottom: 2px solid #0f2744 !important;
+      padding-bottom: 2mm !important;
+      margin-bottom: 2mm !important;
+      position: static !important;
+    }
+
+    .boleta-header-date {
+      position: absolute !important;
+      top: 5mm;
+      right: 5mm;
+      display: inline-flex;
+      align-items: center;
+      gap: 1mm;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      white-space: nowrap;
+      color: #172033;
+      font-size: 7px;
+      font-weight: 800;
+      letter-spacing: 0;
+      z-index: 3 !important;
+    }
+
+    .boleta-header-date span {
+      display: inline-block;
+      min-width: 20mm;
+      padding-bottom: 0.5mm;
+      border-bottom: 1px solid #172033;
+      color: #172033;
+      text-align: center;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .boleta-card > .flex.items-center.justify-between > .text-center {
+      margin-right: 34mm !important;
+    }
+
+    .boleta-card .border-black {
+      border-color: #94a3b8 !important;
+    }
+
+    .boleta-card [id^="qrCode"] {
+      width: 22mm !important;
+      height: 22mm !important;
+    }
+
+    .boleta-card [id^="qrCode"] img,
+    .boleta-card [id^="qrCode"] canvas {
+      width: 20mm !important;
+      height: 20mm !important;
+    }
+
+    .boleta-card > .flex.items-center.justify-between > div:last-child {
+      position: absolute !important;
+      left: 4mm;
+      bottom: 4mm;
+      z-index: 3 !important;
+      width: 22mm;
+      height: 22mm;
+      padding: 1mm !important;
+      border: 1px solid #1e293b !important;
+      background: #fff !important;
+    }
+
+    .boleta-card > .flex.items-center.justify-between h3 {
+      color: #172033 !important;
+      font-size: 16px !important;
+      letter-spacing: 0.08em;
+    }
+
+    .boleta-card > .flex.items-center.justify-between > .flex:first-child span:first-child {
+      color: #30466d !important;
+      font-size: 16px !important;
+    }
+
+    .boleta-card > .flex.items-center.justify-between > .flex:first-child span:last-child {
+      color: #64748b !important;
+      font-size: 6px !important;
+    }
+
+    .boleta-card > .flex.items-center.justify-between > .text-center > span {
+      background: transparent !important;
+      border: 0 !important;
+      color: #64748b !important;
+      font-size: 7px !important;
+      padding: 0 !important;
+    }
+
+    .boleta-card .table-bordered:first-of-type {
+      margin-bottom: 5mm !important;
+    }
+
+    .boleta-card .table-bordered:first-of-type td:nth-child(odd) {
+      font-size: 7px;
+      font-weight: 800;
+      color: #172033;
+      letter-spacing: 0.03em;
+    }
+
+    .boleta-card .table-bordered:first-of-type td:nth-child(even) {
+      font-size: 10px;
+      min-height: 7mm;
+      font-weight: 400 !important;
+      letter-spacing: 0.02em;
+    }
+
+    .boleta-card .table-bordered:nth-of-type(2) {
+      border: 1px solid #cbd5e1;
+      border-radius: 1.5mm;
+      border-collapse: separate;
+      border-spacing: 2mm 1.5mm;
+      background: rgba(248, 250, 252, 0.7);
+      margin-bottom: 4mm !important;
+    }
+
+    .boleta-card .table-bordered:nth-of-type(2) td {
+      border: 1px solid #94a3b8;
+      border-radius: 1mm;
+      padding: 2mm 1.5mm;
+      background: #fff !important;
+      font-size: 10px;
+      font-weight: 400;
+    }
+
+    .boleta-card .table-bordered:nth-of-type(2) tbody tr:nth-child(2) td:first-child,
+    .boleta-card .table-bordered:nth-of-type(2) tbody tr:nth-child(2) td:nth-child(2),
+    .boleta-card .table-bordered:nth-of-type(2) tbody tr:nth-child(2) td:nth-child(3),
+    .boleta-card .table-bordered:nth-of-type(2) tbody tr:nth-child(2) td:nth-child(4) {
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+    }
+
+    .boleta-card #pdfRemolque1_1,
+    .boleta-card #pdfRemolque2_1,
+    .boleta-card #pdfRemolque1_2,
+    .boleta-card #pdfRemolque2_2,
+    .boleta-card #pdfTractor1,
+    .boleta-card #pdfDolly1,
+    .boleta-card #pdfTractor2,
+    .boleta-card #pdfDolly2 {
+      font-weight: 900 !important;
+      letter-spacing: 0.16em !important;
+    }
+
+    .boleta-card .table-bordered:nth-of-type(2) thead td {
+      border: 0;
+      background: transparent !important;
+      text-align: left;
+      font-size: 7px;
+      padding: 0 1.5mm;
+      font-weight: 400;
+    }
+
+    .boleta-card .table-bordered:nth-of-type(2) tbody tr:last-child td {
+      border: 0;
+      background: transparent !important;
+      padding: 0 1.5mm;
+      font-size: 7px;
+      color: #172033;
+    }
+
+    .boleta-card > .border {
+      border: 0 !important;
+      border-bottom: 1px solid #94a3b8 !important;
+      border-radius: 0 !important;
+      padding: 1mm 0 !important;
+      min-height: 13mm !important;
+      margin-bottom: 4mm !important;
+      background: transparent;
+    }
+
+    .boleta-card > .border > div:first-child {
+      color: #172033 !important;
+      font-size: 7px !important;
+      font-weight: 400 !important;
+    }
+
+    .boleta-card > .border > div:last-child {
+      font-size: 8px !important;
+    }
+
+    .boleta-card > .grid {
+      position: absolute;
+      left: 4mm;
+      right: 4mm;
+      bottom: 3mm;
+    }
+
+    .boleta-card > .grid > div:first-child {
+      display: none;
+    }
+
+    .boleta-card > .grid > div:last-child {
+      grid-column: span 12 / span 12;
+      margin-left: 55%;
+    }
+
+    .boleta-card > .grid > div:last-child .h-6 {
+      height: 6mm;
+    }
+
+    .boleta-card > .grid > div:last-child .text-\[10px\] {
+      font-size: 7px !important;
+      color: #172033 !important;
+    }
+
+    .dashed-cut-line {
+      position: relative;
+      height: 8mm;
+      margin: 0;
+      box-sizing: border-box;
+      align-self: stretch;
+      min-height: 0;
+      overflow: visible;
+      break-inside: avoid;
+      break-before: avoid;
+      break-after: avoid;
+    }
+
+    .dashed-cut-line::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      border-top: 1px dashed #94a3b8;
+    }
+
+    .dashed-cut-line::after {
+      content: '✂ Línea de corte / Separación de talón';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      padding: 0 8px;
+      font-size: 8px;
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    /* Animaciones suaves */
+    .fade-in {
+      animation: fadeIn 0.25s ease-out forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-[#f0f4f9] text-slate-800 font-sans min-h-screen flex flex-col antialiased">
+
+  <!-- ========================================================= -->
+  <!-- 1. PANTALLA DE LOGIN LOCAL (BaseOri / Traxion2026!) -->
+  <!-- ========================================================= -->
+  <div id="loginView" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/90 backdrop-blur-md p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden fade-in">
+      
+      <!-- Cabecera del login con logo Solistica -->
+      <div class="bg-[#0f2744] px-8 py-7 text-center border-b border-slate-800">
+        <div class="inline-flex items-center gap-1.5 justify-center mb-1">
+          <span class="text-3xl font-extrabold tracking-tight text-white">Solistica</span>
+          <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 mt-2"></span>
+        </div>
+        <div class="text-[11px] font-semibold uppercase tracking-widest text-slate-300">
+          by <span class="font-extrabold text-white">TRAXION</span>
+        </div>
+        <p class="text-xs text-slate-300 mt-2 font-medium">Portal Operativo de Carga Full Planta</p>
+      </div>
+
+      <!-- Formulario de credenciales -->
+      <form id="loginForm" class="p-8 space-y-5">
+        <div id="loginError" class="hidden p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center gap-2">
+          <i data-lucide="alert-circle" class="w-4 h-4 text-rose-600 shrink-0"></i>
+          <span>Usuario o contraseña incorrectos.</span>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5" for="loginUser">
+            Credencial / Usuario
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+              <i data-lucide="user" class="w-4 h-4"></i>
+            </span>
+            <input 
+              type="text" 
+              id="loginUser" 
+              name="username"
+              autocomplete="username"
+              required 
+              placeholder="BaseOri"
+              class="w-full pl-10 pr-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 placeholder-slate-400 transition"
+            >
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5" for="loginPass">
+            Contraseña
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+              <i data-lucide="lock" class="w-4 h-4"></i>
+            </span>
+            <input 
+              type="password" 
+              id="loginPass" 
+              name="password"
+              autocomplete="current-password"
+              required 
+              placeholder="••••••••••••"
+              class="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 placeholder-slate-400 transition"
+            >
+            <button 
+              type="button" 
+              id="btnTogglePass" 
+              class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition"
+              title="Mostrar u ocultar contraseña"
+            >
+              <i data-lucide="eye" id="passIcon" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <button 
+          type="submit" 
+          class="w-full bg-[#0f2744] hover:bg-[#163a66] text-white py-3 rounded-xl font-bold text-sm tracking-wide shadow-lg hover:shadow-xl transition flex items-center justify-center gap-2"
+        >
+          <span>Iniciar Sesión</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+
+        <div class="text-center pt-2">
+          <p class="text-[11px] text-slate-400">Acceso restringido a personal de patio autorizado</p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- 2. NAVBAR SUPERIOR ESTILO SOLISTICA BY TRAXION -->
+  <!-- ========================================================= -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Logo Corporativo -->
+        <div class="flex items-center gap-8">
+          <div class="flex flex-col">
+            <div class="flex items-baseline gap-1">
+              <span class="text-2xl sm:text-3xl font-black tracking-tight text-[#0f2744]">Solistica</span>
+              <span class="w-2 h-2 rounded-full bg-cyan-500 mb-1"></span>
+            </div>
+            <span class="text-[10px] font-bold tracking-widest uppercase text-slate-500 -mt-1.5">
+              by <span class="font-extrabold text-[#0f2744]">TRAXION</span>
+            </span>
+          </div>
+
+          <!-- Pestaña Activa Única (Recomendaciones e Historial eliminados) -->
+          <nav class="hidden md:flex space-x-6">
+            <a href="#" class="border-b-2 border-sky-600 text-sky-700 font-bold text-sm px-1 pb-1 transition flex items-center gap-2">
+              <i data-lucide="file-check-2" class="w-4 h-4"></i>
+              <span>Emisión de Boletas | Planta</span>
+            </a>
+          </nav>
+        </div>
+
+        <!-- Usuario & Controles -->
+        <div class="flex items-center gap-3 sm:gap-5">
+          <div class="hidden sm:flex items-center gap-2 bg-slate-50 border border-slate-200 px-3.5 py-1.5 rounded-full">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="text-xs font-semibold text-slate-700">Bienvenido <span class="text-sky-700 font-bold" id="badgeUsername">@BaseOri</span></span>
+          </div>
+
+          <button 
+            id="btnLogout" 
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg border border-sky-300 text-sky-700 hover:bg-sky-50 text-xs font-bold transition shadow-sm"
+          >
+            <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+            <span>Cerrar sesión</span>
+          </button>
+
+          <span class="text-slate-300 hidden sm:inline">|</span>
+
+          <a href="../" class="text-xs font-bold text-sky-700 hover:text-sky-900 transition flex items-center gap-1">
+            <span>&larr; Elegir área</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- ========================================================= -->
+  <!-- 3. CONTENIDO PRINCIPAL -->
+  <!-- ========================================================= -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-7 flex-1 w-full">
+
+    <!-- Título Principal y Fecha Fija de Hoy (Sin selector interactivo) -->
+    <div class="mb-4">
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-[#0f2744] tracking-tight">
+        Emisión de Boletas | CARGA FULL PLANTA
+      </h1>
+    </div>
+
+
+    <!-- ======================================================= -->
+    <!-- GRILLA PRINCIPAL: FORMULARIO + MENSAJE WHATSAPP + PREVIEW -->
+    <!-- ======================================================= -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+
+      <!-- COLUMNA IZQUIERDA: FORMULARIO DE CAPTURA (7 columnas) -->
+      <div class="lg:col-span-7">
+        
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center font-bold">
+                <i data-lucide="clipboard-pen-line" class="w-4 h-4"></i>
+              </div>
+              <h2 class="font-bold text-slate-800 text-base">Datos de la Carga</h2>
+            </div>
+            <span class="text-[11px] font-semibold text-slate-400 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200">
+              Formato Full Planta
+            </span>
+          </div>
+
+          <form id="boletaForm" class="space-y-3">
+
+            <!-- Fila 1: Operador y F.O. -->
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-4">
+              <div class="sm:col-span-8">
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1" for="inputOperador">
+                  Nombre del Operador *
+                </label>
+                <input 
+                  type="text" 
+                  id="inputOperador" 
+                  required
+                  placeholder="Ej. Juan Pérez García" 
+                  class="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-600 text-sm font-medium text-slate-800"
+                >
+              </div>
+
+              <div class="sm:col-span-4">
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1" for="inputFO">
+                  F.O. (Folio / Orden) *
+                </label>
+                <input 
+                  type="text" 
+                  id="inputFO" 
+                  required
+                  placeholder="Ej. 6300201430	" 
+                  class="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-600 text-sm font-semibold text-sky-700 uppercase"
+                >
+              </div>
+            </div>
+
+            <!-- Fila 2: Pedidos y Destino (Genera QR) -->
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-4">
+              <div class="sm:col-span-6">
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1" for="inputPedidos">
+                  Pedidos <span class="font-normal normal-case text-slate-400">(opcional)</span>
+                </label>
+                <input 
+                  type="text" 
+                  id="inputPedidos" 
+                  placeholder="Ej. 9504095204 /	9504095210" 
+                  class="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-600 text-sm font-medium text-slate-800"
+                >
+              </div>
+
+              <div class="sm:col-span-6">
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1" for="inputDestino">
+                  Destino (Introducir sin acentos) *
+                </label>
+                <div class="relative">
+                  <input 
+                    type="text" 
+                    id="inputDestino" 
+                    required
+                    placeholder="Ej. CD Merida, CD_Villahermosa..." 
+                    class="w-full pl-3.5 pr-9 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-600 text-sm font-medium text-slate-800"
+                  >
+                  <span class="absolute right-2.5 top-2.5 text-sky-600" title="Este destino será convertido en código QR en la boleta">
+                    <i data-lucide="qr-code" class="w-4 h-4"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fila 3: Matriz de Unidades Full (Tractor, Remolque 1, Remolque 2, Dolly) -->
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+              <div class="text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-2.5 flex items-center gap-1.5">
+                <i data-lucide="truck" class="w-3.5 h-3.5 text-sky-700"></i>
+                <span>Identificación de Unidades (Configuración Full)</span>
+              </div>
+
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div>
+                  <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1" for="inputTractor">
+                    Tractor [T] *
+                  </label>
+                  <input 
+                    type="text" 
+                    id="inputTractor" 
+                    required
+                    placeholder="T-" 
+                    class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-600 text-xs font-bold uppercase text-slate-800"
+                  >
+                </div>
+
+                <div>
+                  <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1" for="inputRemolque1">
+                    Remolque 1 [R] *
+                  </label>
+                  <input 
+                    type="text" 
+                    id="inputRemolque1" 
+                    required
+                    placeholder="R-" 
+                    class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-600 text-xs font-bold uppercase text-slate-800"
+                  >
+                </div>
+
+                <div>
+                  <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1" for="inputRemolque2">
+                    Remolque 2 [R] *
+                  </label>
+                  <input 
+                    type="text" 
+                    id="inputRemolque2" 
+                    required
+                    placeholder="R-" 
+                    class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-600 text-xs font-bold uppercase text-slate-800"
+                  >
+                </div>
+
+                <div>
+                  <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1" for="inputDolly">
+                    Dolly [D] *
+                  </label>
+                  <input 
+                    type="text" 
+                    id="inputDolly" 
+                    required
+                    placeholder="D-" 
+                    class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-600 text-xs font-bold uppercase text-slate-800"
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Fila 4: Supervisor (Aparece en copia, en blanco en original) -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1" for="inputSupervisor">
+                Nombre de Supervisor en Patio *
+              </label>
+              <input 
+                type="text" 
+                id="inputSupervisor" 
+                required
+                placeholder="" 
+                class="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-600 text-sm font-medium text-slate-800"
+              >
+            </div>
+
+            <!-- Fila 5: Observaciones / Comentarios -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1" for="inputObservaciones">
+                Observaciones / Comentarios
+              </label>
+              <textarea 
+                id="inputObservaciones" 
+                rows="2" 
+                placeholder="Sellos de seguridad intactos, carga estibada correctamente..."
+                class="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-600 text-sm font-normal text-slate-800 resize-none"
+              ></textarea>
+            </div>
+
+            <!-- Botones de Acción de Formulario -->
+            <div class="pt-2 flex flex-wrap gap-3">
+              <button 
+                type="button" 
+                id="btnGeneratePdf" 
+                class="flex-1 min-w-[180px] bg-[#0f2744] hover:bg-[#163a66] text-white px-5 py-3 rounded-xl font-bold text-sm shadow-md transition flex items-center justify-center gap-2"
+              >
+                <i data-lucide="file-down" class="w-4 h-4 text-cyan-300"></i>
+                <span>Generar documento</span>
+              </button>
+
+              <button 
+                type="button" 
+                id="btnClearForm" 
+                class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 px-5 py-3 rounded-xl font-bold text-sm transition flex items-center justify-center gap-2"
+              >
+                <i data-lucide="eraser" class="w-4 h-4 text-slate-500"></i>
+                <span>Limpiar</span>
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+
+
+      <!-- COLUMNA DERECHA: MENSAJE WHATSAPP + RESUMEN QR (5 columnas) -->
+      <div class="lg:col-span-5">
+        <div class="rounded-xl border border-slate-200 bg-white px-3 py-2 shadow-sm mb-3">
+          <div class="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            <span>Fecha automática</span>
+            <strong id="displayDateShort" class="text-sm tracking-normal text-[#0f2744]">--/--/----</strong>
+          </div>
+        </div>
+
+        <!-- BLOQUE WHATSAPP: CONCATENADO DE INFORMACIÓN DEL PDF -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex flex-col">
+          
+          <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
+            <div class="flex items-center gap-2.5">
+              <div class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+                <i data-lucide="message-square" class="w-4 h-4"></i>
+              </div>
+              <h2 class="font-bold text-slate-800 text-base">Mensaje WhatsApp</h2>
+            </div>
+            <span class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              En tiempo real
+            </span>
+          </div>
+
+          <!-- Cuadro de texto del WhatsApp concatenado -->
+          <div class="relative flex-1">
+            <textarea 
+              id="whatsappTextOutput" 
+              readonly 
+              rows="6"
+              class="w-full p-2 rounded-xl bg-slate-50 border border-slate-300 text-[11px] font-mono text-slate-800 focus:outline-none resize-none leading-snug select-all"
+            ></textarea>
+          </div>
+
+          <!-- Copiar mensaje -->
+          <div class="pt-2 mt-2">
+            <button 
+              type="button" 
+              id="btnCopyWa" 
+              class="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 py-2.5 px-3 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1.5"
+            >
+              <i data-lucide="copy" class="w-4 h-4 text-slate-600"></i>
+              <span id="copyBtnLabel">Copiar Texto</span>
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ======================================================= -->
+    <!-- 4. VISTA PREVIA VISUAL DE LA BOLETA (PREVIEW DEL PDF) -->
+    <!-- ======================================================= -->
+    <div id="previewSection" style="display: none;" aria-hidden="true">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h2 class="text-lg font-bold text-[#0f2744]">Vista Previa de Boleta Impresa (Carga Full Planta)</h2>
+          <p class="text-xs text-slate-500">Muestra el diseño exacto que se incluirá en el archivo PDF descargable.</p>
+        </div>
+
+        <button 
+          type="button" 
+          id="btnTriggerDownload2" 
+          class="bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-sm transition flex items-center gap-1.5"
+        >
+          <i data-lucide="download" class="w-4 h-4"></i>
+          <span>Descargar PDF Ahora</span>
+        </button>
+      </div>
+
+      <!-- Contenedor scroll horizontal para pantallas móviles -->
+      <div class="bg-slate-200/80 p-4 sm:p-8 rounded-2xl border border-slate-300 overflow-x-auto flex justify-center">
+        
+        <!-- ESTE ES EL ELEMENTO EXACTO QUE CONVIERTE html2pdf EN DOCUMENTO -->
+        <div id="pdfRenderContainer" class="p-6 shadow-xl rounded-sm">
+          
+          <!-- ============================================== -->
+          <!-- TALÓN 1: ORIGINAL (Espacio de firma en blanco) -->
+          <!-- ============================================== -->
+          <div class="boleta-card" id="boletaOriginal">
+            
+            <!-- Encabezado de Boleta -->
+            <div class="flex items-center justify-between pb-2 mb-2 border-b-2 border-black">
+              <!-- Logotipo Solistica by TRAXION -->
+              <div class="flex flex-col">
+                <div class="flex items-baseline gap-1">
+                  <span class="text-2xl font-black tracking-tight text-black">Solistica</span>
+                  <span class="w-2 h-2 rounded-full bg-black mb-0.5"></span>
+                </div>
+                <span class="text-[9px] font-bold tracking-widest uppercase text-black -mt-1.5">
+                  by <span class="font-black">TRAXION</span>
+                </span>
+              </div>
+
+              <!-- Título Central -->
+              <div class="text-center flex-1 mx-4">
+                <h3 class="text-lg font-black uppercase tracking-wider text-black">CARGA FULL PLANTA</h3>
+                <span class="text-[10px] font-bold uppercase tracking-widest bg-black text-white px-2 py-0.5 rounded">ORIGINAL - PATIO</span>
+              </div>
+
+              <div class="boleta-header-date">FECHA: <span id="pdfFechaHeader1">--/--/----</span></div>
+
+              <!-- Código QR Limpio (Sin texto ni etiqueta de destino) -->
+              <div class="flex flex-col items-center justify-center p-1 border border-black bg-white">
+                <div id="qrCodeOriginal" class="w-[72px] h-[72px] flex items-center justify-center"></div>
+              </div>
+            </div>
+
+            <!-- Tabla de Datos -->
+            <table class="table-bordered mb-2">
+              <tbody>
+                <tr>
+                  <td class="font-bold uppercase w-1/3 bg-slate-100">NOMBRE DEL OPERADOR</td>
+                  <td class="font-bold text-slate-900" id="pdfOperador1">---</td>
+                  <td class="font-bold uppercase w-20 text-center bg-slate-100">F.O.</td>
+                  <td class="font-bold text-center w-28 text-slate-900" id="pdfFO1">---</td>
+                </tr>
+                <tr>
+                  <td class="font-bold uppercase bg-slate-100">PEDIDOS</td>
+                  <td colspan="3" class="font-semibold text-slate-900" id="pdfPedidos1">---</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Matriz de Equipos Full -->
+            <table class="table-bordered mb-2 text-center">
+              <thead>
+                <tr class="bg-slate-100 font-bold">
+                  <td class="w-1/4">TRACTOR</td>
+                  <td class="w-1/4">REMOLQUE 1</td>
+                  <td class="w-1/4">REMOLQUE 2</td>
+                  <td class="w-1/4">DOLLY</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="py-2 font-black text-sm" id="pdfTractor1">---</td>
+                  <td class="py-2 font-black text-sm" id="pdfRemolque1_1">---</td>
+                  <td class="py-2 font-black text-sm" id="pdfRemolque2_1">---</td>
+                  <td class="py-2 font-black text-sm" id="pdfDolly1">---</td>
+                </tr>
+                <tr class="text-[9px] font-bold text-slate-600 bg-slate-50">
+                  <td>[ T ]</td>
+                  <td>[ R ]</td>
+                  <td>[ R ]</td>
+                  <td>[ D ]</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Observaciones / Comentarios -->
+            <div class="border border-black p-2 mb-3 min-h-[44px]">
+              <div class="text-[9px] font-bold uppercase text-slate-700 mb-0.5">OBSERVACIONES / COMENTARIOS:</div>
+              <div class="text-[10px] leading-tight text-slate-800" id="pdfObs1">Sin observaciones adicionales.</div>
+            </div>
+
+            <!-- Pie de Boleta: Fecha y Firma de Supervisor -->
+            <div class="grid grid-cols-12 gap-4 items-end pt-1">
+              <div class="col-span-5 text-xs font-bold">
+                FECHA: <span class="font-black underline" id="pdfFecha1">--/--/----</span>
+              </div>
+              <div class="col-span-7 text-center">
+                <!-- En el original el nombre NO aparece: queda en blanco para firma física -->
+                <div class="h-6 border-b border-black mb-1"></div>
+                <div class="text-[10px] font-black uppercase tracking-wider">FIRMA DE SUPERVISOR</div>
+              </div>
+            </div>
+
+          </div>
+
+
+          <!-- ============================================== -->
+          <!-- LÍNEA DE CORTE DIVISORIA                        -->
+          <!-- ============================================== -->
+          <div class="dashed-cut-line"></div>
+
+
+          <!-- ============================================== -->
+          <!-- TALÓN 2: COPIA (Nombre de Supervisor impreso)  -->
+          <!-- ============================================== -->
+          <div class="boleta-card" id="boletaCopia">
+            
+            <!-- Encabezado de Boleta -->
+            <div class="flex items-center justify-between pb-2 mb-2 border-b-2 border-black">
+              <!-- Logotipo Solistica by TRAXION -->
+              <div class="flex flex-col">
+                <div class="flex items-baseline gap-1">
+                  <span class="text-2xl font-black tracking-tight text-black">Solistica</span>
+                  <span class="w-2 h-2 rounded-full bg-black mb-0.5"></span>
+                </div>
+                <span class="text-[9px] font-bold tracking-widest uppercase text-black -mt-1.5">
+                  by <span class="font-black">TRAXION</span>
+                </span>
+              </div>
+
+              <!-- Título Central -->
+              <div class="text-center flex-1 mx-4">
+                <h3 class="text-lg font-black uppercase tracking-wider text-black">CARGA FULL PLANTA</h3>
+                <span class="text-[10px] font-bold uppercase tracking-widest border border-black text-black px-2 py-0.5 rounded">COPIA - OPERADOR</span>
+              </div>
+
+              <div class="boleta-header-date">FECHA: <span id="pdfFechaHeader2">--/--/----</span></div>
+
+              <!-- Código QR Limpio (Sin texto ni etiqueta de destino) -->
+              <div class="flex flex-col items-center justify-center p-1 border border-black bg-white">
+                <div id="qrCodeCopia" class="w-[72px] h-[72px] flex items-center justify-center"></div>
+              </div>
+            </div>
+
+            <!-- Tabla de Datos -->
+            <table class="table-bordered mb-2">
+              <tbody>
+                <tr>
+                  <td class="font-bold uppercase w-1/3 bg-slate-100">NOMBRE DEL OPERADOR</td>
+                  <td class="font-bold text-slate-900" id="pdfOperador2">---</td>
+                  <td class="font-bold uppercase w-20 text-center bg-slate-100">F.O.</td>
+                  <td class="font-bold text-center w-28 text-slate-900" id="pdfFO2">---</td>
+                </tr>
+                <tr>
+                  <td class="font-bold uppercase bg-slate-100">PEDIDOS</td>
+                  <td colspan="3" class="font-semibold text-slate-900" id="pdfPedidos2">---</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Matriz de Equipos Full -->
+            <table class="table-bordered mb-2 text-center">
+              <thead>
+                <tr class="bg-slate-100 font-bold">
+                  <td class="w-1/4">TRACTOR</td>
+                  <td class="w-1/4">REMOLQUE 1</td>
+                  <td class="w-1/4">REMOLQUE 2</td>
+                  <td class="w-1/4">DOLLY</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="py-2 font-black text-sm" id="pdfTractor2">---</td>
+                  <td class="py-2 font-black text-sm" id="pdfRemolque1_2">---</td>
+                  <td class="py-2 font-black text-sm" id="pdfRemolque2_2">---</td>
+                  <td class="py-2 font-black text-sm" id="pdfDolly2">---</td>
+                </tr>
+                <tr class="text-[9px] font-bold text-slate-600 bg-slate-50">
+                  <td>[ T ]</td>
+                  <td>[ R ]</td>
+                  <td>[ R ]</td>
+                  <td>[ D ]</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Observaciones / Comentarios -->
+            <div class="border border-black p-2 mb-3 min-h-[44px]">
+              <div class="text-[9px] font-bold uppercase text-slate-700 mb-0.5">OBSERVACIONES / COMENTARIOS:</div>
+              <div class="text-[10px] leading-tight text-slate-800" id="pdfObs2">Sin observaciones adicionales.</div>
+            </div>
+
+            <!-- Pie de Boleta: Fecha y Nombre de Supervisor impreso -->
+            <div class="grid grid-cols-12 gap-4 items-end pt-1">
+              <div class="col-span-5 text-xs font-bold">
+                FECHA: <span class="font-black underline" id="pdfFecha2">--/--/----</span>
+              </div>
+              <div class="col-span-7 text-center">
+                <!-- En la COPIA SÍ se imprime el nombre del supervisor arriba de la línea -->
+                <div class="text-[11px] font-black text-slate-900 border-b border-black pb-0.5 mb-1" id="pdfSupervisorCopia">
+                  ---
+                </div>
+                <div class="text-[10px] font-black uppercase tracking-wider">FIRMA DE SUPERVISOR</div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <div id="documentModal" class="fixed inset-0 z-40 hidden items-center justify-center bg-slate-950/70 backdrop-blur-md p-4 sm:p-8">
+    <section class="relative flex max-h-[95vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+      <header class="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+        <div>
+          <h2 class="font-bold text-[#0f2744]">Documento generado</h2>
+          <p class="text-xs text-slate-500">Revisa las boletas antes de descargar.</p>
+        </div>
+        <button id="closeDocumentModal" type="button" class="rounded-lg px-3 py-2 text-slate-500 hover:bg-slate-100" aria-label="Cerrar">✕</button>
+      </header>
+      <div id="documentPreview" class="flex-1 overflow-auto bg-slate-200 p-3 sm:p-8"></div>
+      <footer class="flex flex-wrap justify-end gap-3 border-t border-slate-200 bg-white px-5 py-4">
+        <button id="modalDownload" type="button" class="rounded-xl bg-[#0f2744] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#163a66]">Descargar</button>
+      </footer>
+    </section>
+  </div>
+
+
+  <!-- Toast Notificaciones Flotantes -->
+  <div id="toastNotification" class="fixed bottom-5 right-5 z-50 bg-[#0f2744] text-white px-5 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+    <span id="toastMessage">Operación realizada con éxito</span>
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- JAVASCRIPT: LÓGICA DE LOGIN, SINCRONIZACIÓN, QR Y PDF    -->
+  <!-- ========================================================= -->
+  <script>
+    // Credenciales fijas
+    const AUTH_CREDENTIALS = {
+      user: 'BaseOri',
+      pass: 'Traxion2026!'
+    };
+
+    // Referencias DOM
+    const loginView = document.getElementById('loginView');
+    const loginForm = document.getElementById('loginForm');
+    const loginUser = document.getElementById('loginUser');
+    const loginPass = document.getElementById('loginPass');
+    const loginError = document.getElementById('loginError');
+    const btnLogout = document.getElementById('btnLogout');
+    const btnTogglePass = document.getElementById('btnTogglePass');
+
+    // Campos del formulario
+    const boletaForm = document.getElementById('boletaForm');
+    const inputOperador = document.getElementById('inputOperador');
+    const inputFO = document.getElementById('inputFO');
+    const inputPedidos = document.getElementById('inputPedidos');
+    const inputDestino = document.getElementById('inputDestino');
+    const inputTractor = document.getElementById('inputTractor');
+    const inputRemolque1 = document.getElementById('inputRemolque1');
+    const inputRemolque2 = document.getElementById('inputRemolque2');
+    const inputDolly = document.getElementById('inputDolly');
+    const inputSupervisor = document.getElementById('inputSupervisor');
+    const inputObservaciones = document.getElementById('inputObservaciones');
+    const whatsappTextOutput = document.getElementById('whatsappTextOutput');
+
+    // Botones de acción
+    const btnGeneratePdf = document.getElementById('btnGeneratePdf');
+    const btnClearForm = document.getElementById('btnClearForm');
+    const btnTriggerDownload2 = document.getElementById('btnTriggerDownload2');
+    const btnCopyWa = document.getElementById('btnCopyWa');
+    const copyBtnLabel = document.getElementById('copyBtnLabel');
+    const documentModal = document.getElementById('documentModal');
+    const documentPreview = document.getElementById('documentPreview');
+    const pdfRenderContainer = document.getElementById('pdfRenderContainer');
+    const modalDownload = document.getElementById('modalDownload');
+    const closeDocumentModal = document.getElementById('closeDocumentModal');
+
+    // Instancias de códigos QR
+    let qrOriginalInstance = null;
+    let qrCopiaInstance = null;
+
+    // ===================================================
+    // MANEJO DE FECHA ACTUAL DE HOY (FIJA Y AUTOMÁTICA)
+    // ===================================================
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const year = today.getFullYear();
+    const formattedShortDate = `${day}/${month}/${year}`;
+
+    // Insertar fecha fija en cabecera y en boletas
+    document.getElementById('displayDateShort').textContent = formattedShortDate;
+    document.getElementById('pdfFecha1').textContent = formattedShortDate;
+    document.getElementById('pdfFecha2').textContent = formattedShortDate;
+    document.getElementById('pdfFechaHeader1').textContent = formattedShortDate;
+    document.getElementById('pdfFechaHeader2').textContent = formattedShortDate;
+
+
+    // ===================================================
+    // AUTENTICACIÓN LOCAL
+    // ===================================================
+    function checkAuth() {
+      const isAuth = sessionStorage.getItem('solistica_auth');
+      if (isAuth === 'true') {
+        loginView.classList.add('hidden');
+      } else {
+        loginView.classList.remove('hidden');
+      }
+    }
+
+    if (loginForm) {
+      loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const u = loginUser.value.trim();
+        const p = loginPass.value.trim();
+
+        if (u === AUTH_CREDENTIALS.user && p === AUTH_CREDENTIALS.pass) {
+          sessionStorage.setItem('solistica_auth', 'true');
+          loginError.classList.add('hidden');
+          loginView.classList.add('hidden');
+          showToast('Sesión iniciada correctamente como @BaseOri');
+        } else {
+          loginError.classList.remove('hidden');
+        }
+      });
+    }
+
+    if (btnLogout) {
+      btnLogout.addEventListener('click', () => {
+        sessionStorage.removeItem('solistica_auth');
+        checkAuth();
+        showToast('Sesión cerrada correctamente');
+      });
+    }
+
+    if (btnTogglePass) {
+      btnTogglePass.addEventListener('click', () => {
+        const isPassword = loginPass.getAttribute('type') === 'password';
+        loginPass.setAttribute('type', isPassword ? 'text' : 'password');
+        const icon = document.getElementById('passIcon');
+        if (icon) {
+          icon.setAttribute('data-lucide', isPassword ? 'eye-off' : 'eye');
+          if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+      });
+    }
+
+
+    // ===================================================
+    // GENERACIÓN DINÁMICA DE CÓDIGOS QR (DESTINO LIMPIO)
+    // ===================================================
+    function updateQrCodes(text) {
+      const qrData = text.trim() || 'SIN_DESTINO_ASIGNADO';
+
+      const qrTargetOriginal = document.getElementById('qrCodeOriginal');
+      const qrTargetCopia = document.getElementById('qrCodeCopia');
+
+      if (!qrTargetOriginal || !qrTargetCopia) return;
+
+      qrTargetOriginal.innerHTML = '';
+      qrTargetCopia.innerHTML = '';
+
+      if (typeof QRCode !== 'undefined') {
+        qrOriginalInstance = new QRCode(qrTargetOriginal, {
+          text: qrData,
+          width: 70,
+          height: 70,
+          colorDark: '#000000',
+          colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.M
+        });
+
+        qrCopiaInstance = new QRCode(qrTargetCopia, {
+          text: qrData,
+          width: 70,
+          height: 70,
+          colorDark: '#000000',
+          colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      }
+    }
+
+
+    // ===================================================
+    // SINCRONIZACIÓN DE BOLETAS Y MENSAJE DE WHATSAPP
+    // ===================================================
+    function syncState() {
+      const operador = inputOperador.value.trim() || '---';
+      const fo = inputFO.value.trim() || '---';
+      const pedidos = inputPedidos.value.trim() || 'Sin especificar';
+      const destino = inputDestino.value.trim() || '';
+      const tractor = inputTractor.value.trim().toUpperCase() || '---';
+      const rem1 = inputRemolque1.value.trim().toUpperCase() || '---';
+      const rem2 = inputRemolque2.value.trim().toUpperCase() || '---';
+      const dolly = inputDolly.value.trim().toUpperCase() || '---';
+      const supervisor = inputSupervisor.value.trim() || '---';
+      const observaciones = inputObservaciones.value.trim() || 'Sin observaciones.';
+
+      // Actualizar Talón 1 (Original): Supervisor en blanco para firma autógrafa
+      document.getElementById('pdfOperador1').textContent = operador;
+      document.getElementById('pdfFO1').textContent = fo;
+      document.getElementById('pdfPedidos1').textContent = pedidos;
+      document.getElementById('pdfTractor1').textContent = tractor;
+      document.getElementById('pdfRemolque1_1').textContent = rem1;
+      document.getElementById('pdfRemolque2_1').textContent = rem2;
+      document.getElementById('pdfDolly1').textContent = dolly;
+      document.getElementById('pdfObs1').textContent = observaciones;
+
+      // Actualizar Talón 2 (Copia): Nombre de Supervisor SÍ aparece impreso
+      document.getElementById('pdfOperador2').textContent = operador;
+      document.getElementById('pdfFO2').textContent = fo;
+      document.getElementById('pdfPedidos2').textContent = pedidos;
+      document.getElementById('pdfTractor2').textContent = tractor;
+      document.getElementById('pdfRemolque1_2').textContent = rem1;
+      document.getElementById('pdfRemolque2_2').textContent = rem2;
+      document.getElementById('pdfDolly2').textContent = dolly;
+      document.getElementById('pdfObs2').textContent = observaciones;
+      document.getElementById('pdfSupervisorCopia').textContent = supervisor !== '---' ? supervisor.toUpperCase() : '---';
+
+      // Actualizar los códigos QR limpios con el destino
+      updateQrCodes(destino);
+
+      // Concatenar el Mensaje de WhatsApp
+      const waMessage = 
+`📋 *CARGA DE FULL PLANTA*
+──────────────────────
+📅 *Fecha:* ${formattedShortDate}
+🔖 *F.O.:* ${fo}
+👤 *Operador:* ${operador}
+📦 *Pedidos:* ${pedidos}
+📍 *Destino:* ${destino || 'No especificado'}
+
+🚜 *UNIDADES:*
+• Tractor [T]: ${tractor}
+• Remolque 1 [R]: ${rem1}
+• Remolque 2 [R]: ${rem2}
+• Dolly [D]: ${dolly}
+
+📝 *Observaciones:* ${observaciones}`;
+
+      whatsappTextOutput.value = waMessage;
+    }
+
+    // Vincular todos los inputs para actualización en tiempo real
+    const allInputs = [
+      inputOperador, inputFO, inputPedidos, inputDestino,
+      inputTractor, inputRemolque1, inputRemolque2, inputDolly,
+      inputSupervisor, inputObservaciones
+    ];
+
+    allInputs.forEach(elem => {
+      if (elem) {
+        elem.addEventListener('input', syncState);
+      }
+    });
+
+
+    // ===================================================
+    // ACCIONES DE WHATSAPP: COPIAR Y ENVIAR
+    // ===================================================
+    if (btnCopyWa) {
+      btnCopyWa.addEventListener('click', () => {
+        const text = whatsappTextOutput.value;
+        if (!text) return;
+
+        // Copiado seguro compatible
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => {
+            handleCopiedFeedback();
+          }).catch(() => {
+            fallbackCopy(text);
+          });
+        } else {
+          fallbackCopy(text);
+        }
+      });
+    }
+
+    function fallbackCopy(text) {
+      whatsappTextOutput.select();
+      document.execCommand('copy');
+      handleCopiedFeedback();
+    }
+
+    function handleCopiedFeedback() {
+      copyBtnLabel.textContent = '¡Copiado!';
+      showToast('Mensaje de WhatsApp copiado al portapapeles');
+      setTimeout(() => {
+        copyBtnLabel.textContent = 'Copiar Texto';
+      }, 2000);
+    }
+
+
+    // ===================================================
+    // EXPORTACIÓN A PDF Y DESCARGA
+    // ===================================================
+    function downloadPDF() {
+      if (!validateForm()) return;
+
+      const element = pdfRenderContainer;
+      const foVal = inputFO.value.trim() || 'FULL_PLANTA';
+      const cleanFileName = `Boleta_Solistica_${foVal}_${day}${month}${year}.pdf`;
+
+      // Notificación previa
+      showToast('Generando archivo PDF en alta definición...');
+
+      const opt = {
+        margin: [9.5, 10, 9.5, 10],
+        filename: cleanFileName,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: {
+          scale: 2,
+          width: element.offsetWidth,
+          height: element.offsetHeight,
+          useCORS: true,
+          letterRendering: true,
+          logging: false
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['css'] }
+      };
+
+      if (typeof html2pdf !== 'undefined') {
+        html2pdf().set(opt).from(element).save().then(() => {
+          showToast('¡PDF descargado con éxito!');
+        }).catch(err => {
+          console.error(err);
+          showToast('Error al compilar el PDF');
+        });
+      } else {
+        showToast('No se pudo cargar el generador de PDF');
+      }
+    }
+
+    function openDocumentModal() {
+      if (!validateForm()) return;
+      documentPreview.appendChild(pdfRenderContainer);
+      documentModal.classList.remove('hidden');
+      documentModal.classList.add('flex');
+    }
+
+    function validateForm() {
+      if (boletaForm.checkValidity()) return true;
+      boletaForm.reportValidity();
+      return false;
+    }
+
+    function closeDocument() {
+      documentModal.classList.add('hidden');
+      documentModal.classList.remove('flex');
+    }
+
+    function clearForm() {
+      closeDocument();
+      boletaForm.reset();
+      syncState();
+      showToast('Formulario limpio para generar un nuevo documento');
+    }
+
+    if (btnGeneratePdf) btnGeneratePdf.addEventListener('click', openDocumentModal);
+    if (btnTriggerDownload2) btnTriggerDownload2.addEventListener('click', openDocumentModal);
+    if (btnClearForm) btnClearForm.addEventListener('click', clearForm);
+    if (modalDownload) modalDownload.addEventListener('click', downloadPDF);
+    if (closeDocumentModal) closeDocumentModal.addEventListener('click', closeDocument);
+    if (documentModal) documentModal.addEventListener('click', (event) => {
+      if (event.target === documentModal) closeDocument();
+    });
+
+
+    // ===================================================
+    // UTILIDADES: TOAST NOTIFICATIONS
+    // ===================================================
+    let toastTimeout = null;
+    function showToast(msg) {
+      const toast = document.getElementById('toastNotification');
+      const text = document.getElementById('toastMessage');
+      if (!toast || !text) return;
+
+      text.textContent = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3000);
+    }
+
+
+    // ===================================================
+    // INICIALIZACIÓN
+    // ===================================================
+    window.addEventListener('DOMContentLoaded', () => {
+      sessionStorage.removeItem('solistica_auth');
+      localStorage.removeItem('solistica_auth');
+      if (typeof lucide !== 'undefined' && lucide.createIcons) {
+        lucide.createIcons();
+      }
+      checkAuth();
+      syncState();
+    });
+  </script>
+</body>
+</html>

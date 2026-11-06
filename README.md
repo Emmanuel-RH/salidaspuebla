@@ -13,6 +13,7 @@ Facilitar al personal operativo y administrativo el acceso a información actual
 | **Horarios de Movedores** | Consulta de los horarios asignados al personal de movimiento de unidades. 
 | **Turnos Puebla** | Consulta de la programación semanal de turnos de Puebla. 
 | **Documentación Pendiente** | Calendario para la visualización y seguimiento de documentación pendiente. 
+| **Boletas de Carga Full Planta** | Captura operativa y emisión de boletas PDF para carga full.
 
 ## Características
 
