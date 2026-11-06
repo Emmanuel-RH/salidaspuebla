@@ -8,19 +8,20 @@
   <!-- Google Fonts Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap&v=20261106" rel="stylesheet">
 
   <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com?v=20261106"></script>
 
   <!-- Lucide Icons CDN -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/lucide@latest?20261106"></script>
 
   <!-- QRCode.js library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js?v=20261106"></script>
 
-  <!-- html2pdf.js bundle -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <!-- Librerías de captura y PDF, con colocación manual en una hoja A4 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js?v=20261106"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js?v=20261106"></script>
 
   <script>
     tailwind.config = {
@@ -48,8 +49,8 @@
   <style>
     /* Estilos específicos para impresión / exportación PDF */
     #pdfRenderContainer {
-      width: 190mm;
-      height: 277mm;
+      width: 718px;
+      height: 1047px;
       padding: 0;
       box-sizing: border-box;
       background-color: #ffffff;
@@ -58,11 +59,11 @@
       page-break-after: avoid;
       break-after: avoid;
       display: grid;
-      grid-template-rows: 134.5mm 8mm 134.5mm;
+      grid-template-rows: 508px 30px 508px;
     }
 
     .boleta-card {
-      height: 134.5mm;
+      height: 508px;
       min-height: 0;
       min-width: 0;
       border: 1px solid #1e293b;
@@ -326,7 +327,7 @@
 
     .dashed-cut-line {
       position: relative;
-      height: 8mm;
+      height: 30px;
       margin: 0;
       box-sizing: border-box;
       align-self: stretch;
@@ -806,7 +807,7 @@
       <!-- Contenedor scroll horizontal para pantallas móviles -->
       <div class="bg-slate-200/80 p-4 sm:p-8 rounded-2xl border border-slate-300 overflow-x-auto flex justify-center">
         
-        <!-- ESTE ES EL ELEMENTO EXACTO QUE CONVIERTE html2pdf EN DOCUMENTO -->
+        <!-- Este elemento se captura completo y se coloca en una sola hoja A4 -->
         <div id="pdfRenderContainer" class="p-6 shadow-xl rounded-sm">
           
           <!-- ============================================== -->
@@ -1302,41 +1303,57 @@
     // ===================================================
     // EXPORTACIÓN A PDF Y DESCARGA
     // ===================================================
-    function downloadPDF() {
+    async function downloadPDF() {
       if (!validateForm()) return;
 
       const element = pdfRenderContainer;
       const foVal = inputFO.value.trim() || 'FULL_PLANTA';
       const cleanFileName = `Boleta_Solistica_${foVal}_${day}${month}${year}.pdf`;
 
-      // Notificación previa
       showToast('Generando archivo PDF en alta definición...');
 
-      const opt = {
-        margin: [9.5, 10, 9.5, 10],
-        filename: cleanFileName,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: {
-          scale: 2,
-          width: element.offsetWidth,
-          height: element.offsetHeight,
-          useCORS: true,
-          letterRendering: true,
-          logging: false
-        },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['css'] }
-      };
+      if (typeof html2canvas === 'undefined' || !window.jspdf) {
+        showToast('No se pudieron cargar las librerías del PDF');
+        return;
+      }
 
-      if (typeof html2pdf !== 'undefined') {
-        html2pdf().set(opt).from(element).save().then(() => {
-          showToast('¡PDF descargado con éxito!');
-        }).catch(err => {
-          console.error(err);
-          showToast('Error al compilar el PDF');
+      try {
+        const canvas = await html2canvas(element, {
+          width: 718,
+          height: 1047,
+          windowWidth: 718,
+          windowHeight: 1047,
+          scale: 2,
+          useCORS: true,
+          backgroundColor: '#ffffff',
+          scrollX: 0,
+          scrollY: 0,
+          logging: false
         });
-      } else {
-        showToast('No se pudo cargar el generador de PDF');
+
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+          unit: 'mm',
+          format: 'a4',
+          orientation: 'portrait',
+          compress: true
+        });
+
+        pdf.addImage(
+          canvas.toDataURL('image/jpeg', 0.98),
+          'JPEG',
+          10,
+          10,
+          190,
+          277,
+          undefined,
+          'FAST'
+        );
+        pdf.save(cleanFileName);
+        showToast('¡PDF descargado con éxito!');
+      } catch (error) {
+        console.error('Error al generar el PDF:', error);
+        showToast('Error al compilar el PDF');
       }
     }
 
